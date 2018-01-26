@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Лукин](https://up.htmlacademy.ru/javascript/12/user/573599).
-* Наставник: `Неизвестно`.
+* Наставник: `Роман Чаругин`.
 
 ---
 
