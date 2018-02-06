@@ -1,12 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Лукин](https://up.htmlacademy.ru/javascript/12/user/573599).
-<<<<<<< HEAD
-* Наставник: [Роман Чаругин]
-(https://htmlacademy.ru/profile/id345379).
-=======
-* Наставник: `Роман Чаругин`.
->>>>>>> 567ca1cfc8e84d395b471682a533cd50d0b8d878
+* Наставник: [Роман Чаругин](https://htmlacademy.ru/profile/id345379).
 
 ---
 
