@@ -42,7 +42,7 @@ function createButtonsPin(house) {
   pinElement.querySelector('img').src = house.author.avatar;
   pinElement.style.left = house.location.x + 'px';
   pinElement.style.top = (house.location.y - WIDTH_PIN) + 'px';
-
+  pinElement.classList.add('fragments');
   return pinElement;
 }
 /*
@@ -53,7 +53,6 @@ function makeFragmentPins(houses) {
   for (var i = 0; i < houses.length; i++) {
     fragment.appendChild(createButtonsPin(houses[i]));
   }
-
   return fragment;
 }
 /*
@@ -210,3 +209,133 @@ function getRandomCollection(arr, N) {
   }
   return resultArr;
 }
+
+/*
+ * !Весь блок по заданию №14 в следующих заданиях вынесу в отдельный модуль.
+ */
+
+var mainPin = userDialog.querySelector('.map__pin--main');
+var pins = userDialog.querySelector('.map__pins').querySelectorAll('button');
+
+var address = document.getElementById('address');
+address.setAttribute('disabled', true);
+
+var form = document.querySelector('.notice__form');
+
+var fieldSets = form.querySelectorAll('fieldset');
+var btnReset = form.querySelector('.form__reset');
+
+// Значения 40 и 44 это ширина, высота метки. Пока не присваиваю переменным, чтобы не порождать конфликты с заданием 13.
+
+var startPinX = mainPin.offsetLeft + 40 / 2;
+var startPinY = mainPin.offsetTop + 18 + 44 / 2;
+var startAddress = (startPinX) + ', ' + (startPinY); // Запомним координаты адреса, на конце метки при старте.
+address.value = startAddress; // Устанавливаем старовое положение метки в поле адреса.
+
+
+btnReset.addEventListener('click', function () {
+
+  var currentCard = document.querySelector('article.map__card');
+
+  userDialog.classList.add('map--faded');
+  form.reset(); // Сбрасываем поля до стартовых значений.
+  currentCard.style.display = 'none'; // Скрываем карточку.
+
+  for (var i = 1; i < pins.length; i++) {
+    pins[i].parentNode.removeChild(pins[i]); // Удаляем метки, кроме главной.
+  }
+  fieldSets.forEach(function (value) { // Убираем доспуп к полям формы.
+    value.setAttribute('disabled', true);
+  });
+  //
+  address.value = startAddress; // Возвращаем полю адреса значение стартовой позиции..
+  mainPin.style.left = startPinX; // ..и ставим метку на стартовую позицию.
+  mainPin.style.top = startPinY;
+});
+
+// Зададим зависимость минимальной стоимости аренды от типа жилья.
+
+form.price.addEventListener('focus', function (evt) {
+  var mySelect = form.type;
+  for (var i = 0; i < mySelect.length; i++) {
+    if (mySelect.options[i].selected) {
+      switch (mySelect.options[i].value) {
+        case 'flat':
+          evt.currentTarget.setAttribute('min', 1000);
+          break;
+        case 'bungalo':
+          evt.currentTarget.setAttribute('min', 0);
+          break;
+        case 'house':
+          evt.currentTarget.setAttribute('min', 5000);
+          break;
+        case 'palace':
+          evt.currentTarget.setAttribute('min', 10000);
+          break;
+      }
+    }
+  }
+});
+
+// Зависимость время заезда и выезда.
+
+form.timein.addEventListener('click', function () {
+  form.timeout.selectedIndex = form.timein.selectedIndex;
+});
+form.timeout.addEventListener('click', function () {
+  form.timein.selectedIndex = form.timeout.selectedIndex;
+});
+
+
+// Удаляет пустой <option>
+
+var rooms = form.rooms;
+var capacity = form.capacity;
+
+function onRemoveHollowOption(evt) {
+  for (var i = 0; i < evt.target.length; ++i) {
+    if (evt.target.options[i].value === '') {
+      evt.target.removeChild(evt.target.querySelector('[value=""]'));
+    }
+  }
+  evt.preventDefault();
+}
+// Задаёт синхронизацию поля количества комнать и поля колличества гостей.
+function onSetRoomWithCapacity(evt) {
+
+  var capacityCount;
+  var room;
+
+  if (evt.target === rooms) {
+    capacityCount = capacity.options[capacity.selectedIndex].value;
+    room = evt.target.value;
+  } else if (evt.target === capacity) {
+    capacityCount = evt.target.value;
+    room = rooms.options[rooms.selectedIndex].value;
+  }
+
+  if (room === '1' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1 гостя');
+
+  } else if (room === '2' && capacityCount !== '2' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1 или 2 гостей');
+
+  } else if (room === '3' && capacityCount !== '3' && capacityCount !== '2' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1, 2 или 3 гостей');
+
+  } else if (room === '100' && capacityCount !== '0') {
+    rooms.setCustomValidity('Не для гостей');
+
+  } else if (rooms.validity.valueMissing) {
+    rooms.setCustomValidity('Обязательное поле');
+  } else {
+    rooms.setCustomValidity('');
+  }
+}
+
+
+rooms.addEventListener('change', onRemoveHollowOption);
+rooms.addEventListener('change', onSetRoomWithCapacity);
+
+capacity.addEventListener('change', onRemoveHollowOption);
+capacity.addEventListener('change', onSetRoomWithCapacity);
