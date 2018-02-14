@@ -42,6 +42,10 @@ function createButtonsPin(house) {
   pinElement.addEventListener('click', function () {
     var fragmentCard = document.createDocumentFragment();
     fragmentCard.appendChild(createMapCard(house));
+    var popup = document.getElementById('new_card');
+    if (popup !== null) {
+      popup.parentNode.removeChild(popup);
+    }
     userDialog.insertBefore(fragmentCard, mapFilterContainer);
   });
   return pinElement;
@@ -52,7 +56,8 @@ function createButtonsPin(house) {
 function makeFragmentPins(houses) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < houses.length; i++) {
-    fragment.appendChild(createButtonsPin(houses[i]));
+    var pin = createButtonsPin(houses[i]);
+    fragment.appendChild(pin);
   }
   return fragment;
 }
@@ -79,6 +84,7 @@ function getOfferType(currentType) {
  */
 function createMapCard(house) {
   var mapCardElement = mapCardTemplate.cloneNode(true);
+  mapCardElement.id = 'new_card';
 
   mapCardElement.querySelector('h4').textContent = getOfferType(house.offer.type);
 
@@ -119,10 +125,9 @@ function createMapCard(house) {
   mapCardElement.getElementsByTagName('p')[4].textContent = house.offer.description;
 
   // Задаем картинки жилища.
-  var photosList = document.querySelector('template').content.querySelector('.popup__pictures');
+  var photosList = mapCardElement.querySelector('.popup__pictures');
 
   var photosLiTemplate = photosList.querySelector('li');
-  var photosLi = photosList.getElementsByTagName('li');
 
   var photoFragment = document.createDocumentFragment();
 
@@ -143,13 +148,10 @@ function createMapCard(house) {
 
     photoFragment.appendChild(photoElement);
   }
-  for (i = 0; i < photosLi.length; i++) {
-    photosLi[0].parentNode.removeChild(photosLi[0]);
-  }
   photosList.appendChild(photoFragment);
 
   // Меняем картинку аватара.
-  var avatar = document.querySelector('template').content.querySelector('.popup__avatar');
+  var avatar = mapCardElement.querySelector('.popup__avatar');
   avatar.src = house.author.avatar;
 
   return mapCardElement;
@@ -181,7 +183,7 @@ function genHouses(num) {
             checkout: getRandomElement(CHECKOUT),
             features: getRandomCollection(FEATURES, getRandomNumber(0, FEATURES.length)),
             description: '',
-            photos: getRandomCollection(PHOTOS, PHOTOS.length)
+            photos: getRandomCollection(PHOTOS, getRandomNumber(1, PHOTOS.length))
           },
           location: {
             x: x,
@@ -260,6 +262,6 @@ mainPin.addEventListener('mouseup', function () {
 });
 
 // Отрисовываем карту при запуске страницы.
-var buttonTemplate = document.querySelector('.map__pin');
+var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 var mapFilterContainer = document.querySelector('.map__filters-container');
