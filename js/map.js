@@ -24,9 +24,6 @@ var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
 var AMOUNT_HOUSES = 8;
 var MAX_GUESTS = 20;
 
-
-var newHouses = genHouses(AMOUNT_HOUSES);
-
 /*
  * Возаращает новую метку, созданный на основе данных параметра (объекта).
  */
@@ -37,9 +34,7 @@ function createButtonsPin(house) {
   pinElement.style.left = house.location.x + 'px';
 
   pinElement.style.top = (house.location.y - WIDTH_PIN) + 'px';
-<<<<<<< HEAD
   pinElement.classList.add('fragments');
-=======
 
   // Добавляем обработчик и создание карточки для дома.
   pinElement.addEventListener('click', function () {
@@ -51,7 +46,6 @@ function createButtonsPin(house) {
     }
     userDialog.insertBefore(fragmentCard, mapFilterContainer);
   });
->>>>>>> 735fea1e35abc921a005efe9825bce67a00dc055
   return pinElement;
 }
 /*
@@ -242,20 +236,18 @@ function getRandomCollection(arr, N) {
   return resultArr;
 }
 
-<<<<<<< HEAD
 /*
  * !Весь блок по заданию №14 в следующих заданиях вынесу в отдельный модуль.
  */
-
+var userDialog = document.querySelector('.map');
 var mainPin = userDialog.querySelector('.map__pin--main');
-var pins = userDialog.querySelector('.map__pins').querySelectorAll('button');
+
 
 var address = document.getElementById('address');
 address.setAttribute('disabled', true);
 
 var form = document.querySelector('.notice__form');
 
-var fieldSets = form.querySelectorAll('fieldset');
 var btnReset = form.querySelector('.form__reset');
 
 // Значения 40 и 44 это ширина, высота метки. Пока не присваиваю переменным, чтобы не порождать конфликты с заданием 13.
@@ -265,21 +257,29 @@ var startPinY = mainPin.offsetTop + 18 + 44 / 2;
 var startAddress = (startPinX) + ', ' + (startPinY); // Запомним координаты адреса, на конце метки при старте.
 address.value = startAddress; // Устанавливаем старовое положение метки в поле адреса.
 
-
+// Удаляет метки.
+function removePins() {
+  var pins = document.querySelector('.map__pins').getElementsByTagName('button');
+  var pinsArrLength = pins.length;
+  for (var i = 1; i < pinsArrLength; i++) {
+    pins[0].parentNode.removeChild(pins[1]); // Удаляем метки, кроме главной.
+  }
+}
+// Обработчик кнопки "Сбросить"
 btnReset.addEventListener('click', function () {
 
   var currentCard = document.querySelector('article.map__card');
 
   userDialog.classList.add('map--faded');
   form.reset(); // Сбрасываем поля до стартовых значений.
-  currentCard.style.display = 'none'; // Скрываем карточку.
-
-  for (var i = 1; i < pins.length; i++) {
-    pins[i].parentNode.removeChild(pins[i]); // Удаляем метки, кроме главной.
+  if (currentCard !== null) {
+    currentCard.style.display = 'none'; // Скрываем карточку.
   }
-  fieldSets.forEach(function (value) { // Убираем доспуп к полям формы.
-    value.setAttribute('disabled', true);
+  removePins();
+  form.querySelectorAll('fieldset').forEach(function (value) {
+    value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
   });
+  form.classList.add('notice__form--disabled');
   //
   address.value = startAddress; // Возвращаем полю адреса значение стартовой позиции..
   mainPin.style.left = startPinX; // ..и ставим метку на стартовую позицию.
@@ -365,34 +365,31 @@ function onSetRoomWithCapacity(evt) {
     rooms.setCustomValidity('');
   }
 }
-
-
 rooms.addEventListener('change', onRemoveHollowOption);
 rooms.addEventListener('change', onSetRoomWithCapacity);
 
 capacity.addEventListener('change', onRemoveHollowOption);
 capacity.addEventListener('change', onSetRoomWithCapacity);
-=======
+
 // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
 
-var mainPin = document.querySelector('.map__pin--main');
-var userDialog = document.querySelector('.map');
-var fieldSets = document.querySelector('.notice__form').querySelectorAll('fieldset');
 
 // Заполнение поля адреса координатами стартовой позиции метки.
 
-var address = document.getElementById('address');
 var startPositionPin = (mainPin.offsetLeft + WIDTH_PIN / 2) + ', ' + (mainPin.offsetTop + HEIGHT_PIN / 2);
 address.value = startPositionPin;
 
 mainPin.addEventListener('mouseup', function () {
   userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
-  fieldSets.forEach(function (value) {
+  form.querySelectorAll('fieldset').forEach(function (value) {
     value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
   });
+  form.classList.remove('notice__form--disabled');
+
   address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
   address.value = (mainPin.offsetLeft + WIDTH_PIN / 2) + ', ' + (mainPin.offsetTop + HEIGHT_TIP_OF_PIN + HEIGHT_PIN / 2); // Устанавливаем координаты адреса, на конце метки.
-
+  var newHouses = genHouses(AMOUNT_HOUSES);
+  removePins();
   userDialog.querySelector('.map__pins').appendChild(makeFragmentPins(newHouses)); // Поставили метки обьявлений.
 });
 
@@ -400,4 +397,3 @@ mainPin.addEventListener('mouseup', function () {
 var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 var mapFilterContainer = document.querySelector('.map__filters-container');
->>>>>>> 735fea1e35abc921a005efe9825bce67a00dc055
