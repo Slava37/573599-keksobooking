@@ -102,7 +102,7 @@
 
       <fieldset class="form__element form__element--wide" disabled>
         <label for="title">Заголовок объявления</label>
-        <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио">
+        <input id="title" name="title" type="text" placeholder="Милая, уютная квартирка в центре Токио" minlength="30" maxlength="100" required>
       </fieldset>
 
       <fieldset class="form__element form__element--wide" disabled>
@@ -122,7 +122,7 @@
 
       <fieldset class="form__element" disabled>
         <label for="price">Цена за ночь, руб.</label>
-        <input id="price" name="price" type="number" placeholder="5000">
+        <input id="price" name="price" type="number" placeholder="5000" required maxlength="1000000">
       </fieldset>
 
       <fieldset class="form__element" disabled>
@@ -141,8 +141,9 @@
 
       <fieldset class="form__element" disabled>
         <label for="room_number">Кол-во комнат</label>
-        <select id="room_number" name="rooms">
-          <option value="1" selected>1 комната</option>
+        <select id="room_number" name="rooms" required>
+          <option selected disabled value=""></option>
+          <option value="1">1 комната</option>
           <option value="2">2 комнаты</option>
           <option value="3">3 комнаты</option>
           <option value="100">100 комнат</option>
@@ -151,8 +152,9 @@
 
       <fieldset class="form__element" disabled>
         <label for="capacity">Количество мест</label>
-        <select id="capacity" name="capacity">
-          <option value="3" selected>для 3 гостей</option>
+        <select id="capacity" name="capacity" required>
+          <option selected disabled value=""></option>
+          <option value="3">для 3 гостей</option>
           <option value="2">для 2 гостей</option>
           <option value="1">для 1 гостя</option>
           <option value="0">не для гостей</option>
@@ -244,7 +246,11 @@
 
   <button style="left: 200px; top: 400px;" class="map__pin"><img src="img/avatars/user07.png" width="40" height="40" draggable="false"></button>
 </template>
-
+<script src="js/someRandom.js"></script>
+<script src="js/card.js"></script>
+<script src="js/pin.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/data.js"></script>
 <script src="js/map.js"></script>
 </body>
 </html>
