@@ -1,6 +1,6 @@
 'use strict';
 
-var forms = (function () {
+window.forms = (function () {
 
   var form = document.querySelector('.notice__form');
   var btnReset = form.querySelector('.form__reset');
