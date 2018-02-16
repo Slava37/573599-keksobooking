@@ -4,17 +4,19 @@ window.pin = (function () {
 
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapFilterContainer = document.querySelector('.map__filters-container');
-  var WIDTH_PIN = 40;
-  var HEIGHT_PIN = 44;
-  var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
-  var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
-  var startPositionPinX = mainPin.offsetLeft + WIDTH_PIN / 2;
-  var startPositionPinY = mainPin.offsetTop + HEIGHT_PIN / 2;
 
-  function setMainPinOnStart() {
-    mainPin.style.left = startPositionPinX; // ставим метку на стартовую позицию.
-    mainPin.style.top = startPositionPinY;
-  }
+  var WIDTH_PIN = 40; // position: absolute;
+  var HEIGHT_PIN = 44; // top: 100%; left: 50%;
+  var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
+
+  var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
+  var startPositionPinX = mainPin.offsetLeft;
+  var startPositionPinY = mainPin.offsetTop - HEIGHT_PIN / 2;
+
+  var setMainPinOnStart = function () {
+    mainPin.style.left = startPositionPinX + 'px'; // ставим метку на стартовую позицию.
+    mainPin.style.top = startPositionPinY + 'px';
+  };
   function getHeightPin() {
     return HEIGHT_PIN;
   }
