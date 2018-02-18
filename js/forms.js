@@ -3,18 +3,18 @@
 window.forms = (function () {
 
   var form = document.querySelector('.notice__form');
-  var btnReset = form.querySelector('.form__reset');
   var address = document.getElementById('address');
+  var btnSubmit = form.querySelector('.form__submit');
+  var AMOUNT_HOUSES = 8;
+  var userDialog = document.querySelector('.map');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
 
   address.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
   address.setAttribute('disabled', true);
 
-  // Обработчик кнопки "Сбросить"
-
-  btnReset.addEventListener('click', function () {
-
+  // Доступная и недоступная форма.
+  function disableForm() {
     var currentCard = document.querySelector('article.map__card');
 
     document.querySelector('.map').classList.add('map--faded');
@@ -22,6 +22,7 @@ window.forms = (function () {
     if (currentCard !== null) {
       currentCard.style.display = 'none'; // Скрываем карточку.
     }
+    window.card.hideCard();
     window.pin.removePins();
     form.querySelectorAll('fieldset').forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
@@ -30,7 +31,24 @@ window.forms = (function () {
     //
     address.value = window.pin.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
     window.pin.setMainPinOnStart();
-  });
+
+
+  }
+  function enableForm() {
+
+    userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
+    window.forms.form.querySelectorAll('fieldset').forEach(function (value) {
+      value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
+    });
+    window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
+    window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
+
+    // Устанавливаем координаты адреса, на конце метки.
+    window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
+    var newHouses = window.data.genHouses(AMOUNT_HOUSES); // Создали новый массив домов.
+    window.pin.removePins(); // Удалили старые метки.
+    userDialog.querySelector('.map__pins').appendChild(window.pin.makeFragmentPins(newHouses)); // Поставили метки обьявлений.
+  }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.
 
@@ -58,32 +76,23 @@ window.forms = (function () {
 
   // Зависимость время заезда и выезда.
 
-  form.timein.addEventListener('click', function () {
+  form.timein.addEventListener('change', function () {
     form.timeout.selectedIndex = form.timein.selectedIndex;
   });
-  form.timeout.addEventListener('click', function () {
+  form.timeout.addEventListener('change', function () {
     form.timein.selectedIndex = form.timeout.selectedIndex;
   });
-
-
-  // Удаляет пустой <option>
 
   var rooms = form.rooms;
   var capacity = form.capacity;
 
-  function onRemoveHollowOption(evt) {
-    for (var i = 0; i < evt.target.length; ++i) {
-      if (evt.target.options[i].value === '') {
-        evt.target.removeChild(evt.target.querySelector('[value=""]'));
-      }
-    }
-    evt.preventDefault();
-  }
   // Задаёт синхронизацию поля количества комнать и поля колличества гостей.
   function onSetRoomWithCapacity(evt) {
 
     var capacityCount;
     var room;
+
+    btnSubmit.removeEventListener('focus', selectRoom);
 
     if (evt.target === rooms) {
       capacityCount = capacity.options[capacity.selectedIndex].value;
@@ -105,20 +114,25 @@ window.forms = (function () {
     } else if (room === '100' && capacityCount !== '0') {
       rooms.setCustomValidity('Не для гостей');
 
-    } else if (rooms.validity.valueMissing) {
-      rooms.setCustomValidity('Обязательное поле');
     } else {
       rooms.setCustomValidity('');
     }
   }
-  rooms.addEventListener('change', onRemoveHollowOption);
-  rooms.addEventListener('change', onSetRoomWithCapacity);
+  function selectRoom(evt) {
+    if (rooms.selectedIndex === 0) {
+      rooms.setCustomValidity('Доступна для 1 гостя');
+    }
+    evt.preventDefault();
+  }
 
-  capacity.addEventListener('change', onRemoveHollowOption);
+  btnSubmit.addEventListener('focus', selectRoom);
+  rooms.addEventListener('change', onSetRoomWithCapacity);
   capacity.addEventListener('change', onSetRoomWithCapacity);
 
   return {
     address: address,
-    form: form
+    form: form,
+    enableForm: enableForm,
+    disableForm: disableForm
   };
 })();

@@ -8,12 +8,12 @@ window.pin = (function () {
   var HEIGHT_PIN = 44;
   var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
   var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
-  var startPositionPinX = mainPin.offsetLeft + WIDTH_PIN / 2;
-  var startPositionPinY = mainPin.offsetTop + HEIGHT_PIN / 2;
+  var START_POSITION_X = mainPin.offsetLeft + WIDTH_PIN / 2;
+  var START_POSITION_Y = mainPin.offsetTop + HEIGHT_PIN / 2;
 
   function setMainPinOnStart() {
-    mainPin.style.left = startPositionPinX; // ставим метку на стартовую позицию.
-    mainPin.style.top = startPositionPinY;
+    mainPin.style.left = START_POSITION_X; // ставим метку на стартовую позицию.
+    mainPin.style.top = START_POSITION_Y;
   }
   function getHeightPin() {
     return HEIGHT_PIN;
@@ -25,13 +25,13 @@ window.pin = (function () {
     return HEIGHT_TIP_OF_PIN;
   }
   function getStartPositionPinAddress() {
-    return startPositionPinX + ', ' + startPositionPinY;
+    return START_POSITION_X + ', ' + START_POSITION_Y;
   }
   function getStartPositionPinX() {
-    return startPositionPinX;
+    return START_POSITION_X;
   }
   function getStartPositionPinY() {
-    return startPositionPinY;
+    return START_POSITION_Y;
   }
   // Удаляет метки.
   function removePins() {

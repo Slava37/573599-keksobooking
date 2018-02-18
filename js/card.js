@@ -21,6 +21,15 @@ window.card = (function () {
     }
     return name;
   }
+
+  // Скрывает карточку.
+  function hideCard() {
+    var currentCard = document.querySelector('article.map__card');
+    if (currentCard !== null) {
+      currentCard.style.display = 'none'; // Скрываем карточку.
+    }
+  }
+
   /*
    * Возаращает новое обьявление, созданный на основе данных параметра (объекта).
    */
@@ -99,6 +108,7 @@ window.card = (function () {
     return mapCardElement;
   }
   return {
-    createMapCard: createMapCard
+    createMapCard: createMapCard,
+    hideCard: hideCard
   };
 })();
