@@ -24,8 +24,13 @@ var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
 var AMOUNT_HOUSES = 8;
 var MAX_GUESTS = 20;
 
+var userDialog = document.querySelector('.map');
+var mainPin = userDialog.querySelector('.map__pin--main');
+var form = document.querySelector('.notice__form');
+var fieldSets = form.querySelectorAll('fieldset');
 
-var newHouses = genHouses(AMOUNT_HOUSES);
+var START_PIN_X = mainPin.offsetLeft + 40 / 2;
+var START_PIN_Y = mainPin.offsetTop + 18 + 44 / 2;
 
 /*
  * Возаращает новую метку, созданный на основе данных параметра (объекта).
@@ -37,6 +42,7 @@ function createButtonsPin(house) {
   pinElement.style.left = house.location.x + 'px';
 
   pinElement.style.top = (house.location.y - WIDTH_PIN) + 'px';
+  pinElement.classList.add('fragments');
 
   // Добавляем обработчик и создание карточки для дома.
   pinElement.addEventListener('click', function () {
@@ -238,28 +244,153 @@ function getRandomCollection(arr, N) {
   return resultArr;
 }
 
-// Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
-
-var mainPin = document.querySelector('.map__pin--main');
-var userDialog = document.querySelector('.map');
-var fieldSets = document.querySelector('.notice__form').querySelectorAll('fieldset');
-
-// Заполнение поля адреса координатами стартовой позиции метки.
+/*
+ * !Весь блок по заданию №14 в следующих заданиях вынесу в отдельный модуль.
+ */
 
 var address = document.getElementById('address');
-var startPositionPin = (mainPin.offsetLeft + WIDTH_PIN / 2) + ', ' + (mainPin.offsetTop + HEIGHT_PIN / 2);
-address.value = startPositionPin;
+address.setAttribute('disabled', true);
 
-mainPin.addEventListener('mouseup', function () {
+var btnReset = form.querySelector('.form__reset');
+
+// Удаляет метки.
+function removePins() {
+  var pins = document.querySelector('.map__pins').getElementsByTagName('button');
+  var pinsArrLength = pins.length;
+  for (var i = 1; i < pinsArrLength; i++) {
+    pins[0].parentNode.removeChild(pins[1]); // Удаляем метки, кроме главной.
+  }
+}
+
+// Скрывает карточку.
+function hideCard() {
+  var currentCard = document.querySelector('article.map__card');
+  if (currentCard !== null) {
+    currentCard.style.display = 'none'; // Скрываем карточку.
+  }
+}
+
+// Недоступная форма
+function disableForm() {
+  var startAddress = START_PIN_X + ', ' + START_PIN_Y; // Запомним координаты адреса, на конце метки при старте.
+  address.value = startAddress; // Устанавливаем старовое положение метки в поле адреса.
+  userDialog.classList.add('map--faded');
+  form.reset(); // Сбрасываем поля до стартовых значений.
+
+  hideCard();
+  removePins();
+  fieldSets.forEach(function (value) {
+    value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
+  });
+  form.classList.add('notice__form--disabled');
+  //
+  address.value = startAddress; // Возвращаем полю адреса значение стартовой позиции..
+  mainPin.style.left = START_PIN_X; // ..и ставим метку на стартовую позицию.
+  mainPin.style.top = START_PIN_Y;
+}
+// Обработчик кнопки "Сбросить"
+btnReset.addEventListener('click', disableForm);
+
+// Зададим зависимость минимальной стоимости аренды от типа жилья.
+
+form.price.addEventListener('focus', function (evt) {
+  var mySelect = form.type;
+  for (var i = 0; i < mySelect.length; i++) {
+    if (mySelect.options[i].selected) {
+      switch (mySelect.options[i].value) {
+        case 'flat':
+          evt.currentTarget.setAttribute('min', 1000);
+          break;
+        case 'bungalo':
+          evt.currentTarget.setAttribute('min', 0);
+          break;
+        case 'house':
+          evt.currentTarget.setAttribute('min', 5000);
+          break;
+        case 'palace':
+          evt.currentTarget.setAttribute('min', 10000);
+          break;
+      }
+    }
+  }
+});
+
+// Зависимость время заезда и выезда.
+
+form.timein.addEventListener('change', function () {
+  form.timeout.selectedIndex = form.timein.selectedIndex;
+});
+form.timeout.addEventListener('change', function () {
+  form.timein.selectedIndex = form.timeout.selectedIndex;
+});
+
+
+// Удаляет пустой <option>
+
+var rooms = form.rooms;
+var capacity = form.capacity;
+
+// Задаёт синхронизацию поля количества комнать и поля колличества гостей.
+function onSetRoomWithCapacity(evt) {
+
+  btnSubmit.removeEventListener('focus', selectRoom);
+
+  var capacityCount;
+  var room;
+
+  if (evt.target === rooms) {
+    capacityCount = capacity.options[capacity.selectedIndex].value;
+    room = evt.target.value;
+  } else if (evt.target === capacity) {
+    capacityCount = evt.target.value;
+    room = rooms.options[rooms.selectedIndex].value;
+  }
+  if (room === '1' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1 гостя');
+
+  } else if (room === '2' && capacityCount !== '2' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1 или 2 гостей');
+
+  } else if (room === '3' && capacityCount !== '3' && capacityCount !== '2' && capacityCount !== '1') {
+    rooms.setCustomValidity('Доступна для 1, 2 или 3 гостей');
+
+  } else if (room === '100' && capacityCount !== '0') {
+    rooms.setCustomValidity('Не для гостей');
+  } else {
+    rooms.setCustomValidity('');
+  }
+}
+function selectRoom(evt) {
+  if (rooms.selectedIndex === 0) {
+    rooms.setCustomValidity('Доступна для 1 гостя');
+  }
+  evt.preventDefault();
+}
+var btnSubmit = form.querySelector('.form__submit');
+btnSubmit.addEventListener('focus', selectRoom);
+
+rooms.addEventListener('change', onSetRoomWithCapacity);
+capacity.addEventListener('change', onSetRoomWithCapacity);
+
+
+// Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
+function enableForm() {
+  var startPositionPin = (mainPin.offsetLeft + WIDTH_PIN / 2) + ', ' + (mainPin.offsetTop + HEIGHT_PIN / 2);
+  address.value = startPositionPin;
+
   userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
   fieldSets.forEach(function (value) {
     value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
   });
+  form.classList.remove('notice__form--disabled');
+
   address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
   address.value = (mainPin.offsetLeft + WIDTH_PIN / 2) + ', ' + (mainPin.offsetTop + HEIGHT_TIP_OF_PIN + HEIGHT_PIN / 2); // Устанавливаем координаты адреса, на конце метки.
-
+  var newHouses = genHouses(AMOUNT_HOUSES);
+  removePins();
   userDialog.querySelector('.map__pins').appendChild(makeFragmentPins(newHouses)); // Поставили метки обьявлений.
-});
+}
+mainPin.addEventListener('mouseup', enableForm);
 
 // Отрисовываем карту при запуске страницы.
 var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
