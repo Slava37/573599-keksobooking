@@ -27,12 +27,7 @@ window.pin = (function () {
   function getStartPositionPinAddress() {
     return START_POSITION_X + ', ' + START_POSITION_Y;
   }
-  function getStartPositionPinX() {
-    return START_POSITION_X;
-  }
-  function getStartPositionPinY() {
-    return START_POSITION_Y;
-  }
+
   // Удаляет метки.
   function removePins() {
     var pins = document.querySelector('.map__pins').getElementsByTagName('button');
@@ -83,8 +78,6 @@ window.pin = (function () {
     getHeightTipOfPin: getHeightTipOfPin,
     makeFragmentPins: makeFragmentPins,
     getStartPositionPinAddress: getStartPositionPinAddress,
-    getStartPositionPinX: getStartPositionPinX,
-    getStartPositionPinY: getStartPositionPinY,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,
     mainPin: mainPin

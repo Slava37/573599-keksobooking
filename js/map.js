@@ -12,5 +12,3 @@
   btnReset.addEventListener('click', window.forms.disableForm);
 
 })();
-
-

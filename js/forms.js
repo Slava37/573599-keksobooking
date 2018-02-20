@@ -2,10 +2,10 @@
 
 window.forms = (function () {
 
+  var AMOUNT_HOUSES = 8;
+
   var form = document.querySelector('.notice__form');
   var address = document.getElementById('address');
-  var btnSubmit = form.querySelector('.form__submit');
-  var AMOUNT_HOUSES = 8;
   var userDialog = document.querySelector('.map');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
@@ -92,8 +92,6 @@ window.forms = (function () {
     var capacityCount;
     var room;
 
-    btnSubmit.removeEventListener('focus', selectRoom);
-
     if (evt.target === rooms) {
       capacityCount = capacity.options[capacity.selectedIndex].value;
       room = evt.target.value;
@@ -118,14 +116,7 @@ window.forms = (function () {
       rooms.setCustomValidity('');
     }
   }
-  function selectRoom(evt) {
-    if (rooms.selectedIndex === 0) {
-      rooms.setCustomValidity('Доступна для 1 гостя');
-    }
-    evt.preventDefault();
-  }
 
-  btnSubmit.addEventListener('focus', selectRoom);
   rooms.addEventListener('change', onSetRoomWithCapacity);
   capacity.addEventListener('change', onSetRoomWithCapacity);
 
