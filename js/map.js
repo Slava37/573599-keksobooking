@@ -10,5 +10,5 @@
 
   // Обработчик кнопки "Сбросить"
   btnReset.addEventListener('click', window.forms.disableForm);
-
+  
 })();
