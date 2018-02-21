@@ -4,10 +4,15 @@
 (function () {
 
   var AMOUNT_HOUSES = 8;
+
   var userDialog = document.querySelector('.map');
   var pin = window.pin.mainPin; // Метка нашего обьявления.
   var pinImage = pin.querySelector('.main__pin--image');
+  var btnReset = window.forms.form.querySelector('.form__reset');
   var position;
+
+  // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
+  window.pin.mainPin.addEventListener('mouseup', window.forms.enableForm);
 
   // Реализация передвижения метки.
   pinImage.addEventListener('mousedown', function (evt) {
@@ -68,6 +73,7 @@
     document.addEventListener('mousemove', onMouseMove);
 
   });
+
+  // Обработчик кнопки "Сбросить"
+  btnReset.addEventListener('click', window.forms.disableForm);
 })();
-
-

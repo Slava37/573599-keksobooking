@@ -10,13 +10,15 @@ window.pin = (function () {
   var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
 
   var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
-  var startPositionPinX = mainPin.offsetLeft;
-  var startPositionPinY = mainPin.offsetTop - HEIGHT_PIN / 2;
+
+  var START_POSITION_X = mainPin.offsetLeft;
+  var START_POSITION_Y = mainPin.offsetTop - HEIGHT_PIN / 2;
 
   var setMainPinOnStart = function () {
-    mainPin.style.left = startPositionPinX + 'px'; // ставим метку на стартовую позицию.
-    mainPin.style.top = startPositionPinY + 'px';
+    mainPin.style.left = START_POSITION_X + 'px'; // ставим метку на стартовую позицию.
+    mainPin.style.top = START_POSITION_Y + 'px';
   };
+
   function getHeightPin() {
     return HEIGHT_PIN;
   }
@@ -27,14 +29,9 @@ window.pin = (function () {
     return HEIGHT_TIP_OF_PIN;
   }
   function getStartPositionPinAddress() {
-    return startPositionPinX + ', ' + startPositionPinY;
+    return START_POSITION_X + ', ' + START_POSITION_Y;
   }
-  function getStartPositionPinX() {
-    return startPositionPinX;
-  }
-  function getStartPositionPinY() {
-    return startPositionPinY;
-  }
+
   // Удаляет метки.
   function removePins() {
     var pins = document.querySelector('.map__pins').getElementsByTagName('button');
@@ -85,8 +82,6 @@ window.pin = (function () {
     getHeightTipOfPin: getHeightTipOfPin,
     makeFragmentPins: makeFragmentPins,
     getStartPositionPinAddress: getStartPositionPinAddress,
-    getStartPositionPinX: getStartPositionPinX,
-    getStartPositionPinY: getStartPositionPinY,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,
     mainPin: mainPin
