@@ -56,7 +56,7 @@ window.backend = (function () {
 
     xhr.timeout = 10000; // 10s
 
-    xhr.open('GET', 'https://js.dump.academy/keksobooking/data1');
+    xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
     xhr.send();
   }
 
