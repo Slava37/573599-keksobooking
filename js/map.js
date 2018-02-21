@@ -4,6 +4,9 @@
 (function () {
 
   var AMOUNT_HOUSES = 8;
+  var MAP_MAX_TOP = 150;
+  var MAP_MAX_BOTTOM = 500;
+  var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
 
   var userDialog = document.querySelector('.map');
   var pin = window.pin.mainPin; // Метка нашего обьявления.
@@ -35,13 +38,11 @@
         y: moveEvt.clientY
       };
 
-      var activeMap = document.querySelector('.map__pins');
-      var mapWidth = activeMap.offsetWidth;
 
-      if ((pin.offsetTop - shift.y) < 500 && (pin.offsetTop - shift.y) > 150) {
+      if ((pin.offsetTop - shift.y) < MAP_MAX_BOTTOM && (pin.offsetTop - shift.y) > MAP_MAX_TOP) {
         pin.style.top = (pin.offsetTop - shift.y) + 'px';
       }
-      if ((pin.offsetLeft - shift.x) < mapWidth && (pin.offsetLeft - shift.x) > 0) {
+      if ((pin.offsetLeft - shift.x) < MAP_WIDTH && (pin.offsetLeft - shift.x) > 0) {
         pin.style.left = (pin.offsetLeft - shift.x) + 'px';
       }
       position = (pin.offsetLeft - shift.x) + ', ' + (pin.offsetTop - shift.y);
