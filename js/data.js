@@ -71,6 +71,6 @@ window.data = (function () {
 
   return {
     featuresLength: FEATURES.length,
-    //  genHouses: genHouses
+    genHouses: genHouses
   };
 })();
