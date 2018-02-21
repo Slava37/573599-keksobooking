@@ -2,9 +2,6 @@
 
 window.pin = (function () {
 
-  var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
-  var mapFilterContainer = document.querySelector('.map__filters-container');
-
   var WIDTH_PIN = 40; // position: absolute;
   var HEIGHT_PIN = 44; // top: 100%; left: 50%;
   var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
@@ -19,9 +16,10 @@ window.pin = (function () {
   var MAP_MAX_BOTTOM = 500;
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
 
+  var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var mapFilterContainer = document.querySelector('.map__filters-container');
   var userDialog = document.querySelector('.map');
-  var pin = window.pin.mainPin; // Метка нашего обьявления.
-  var pinImage = pin.querySelector('.main__pin--image');
+  var pinImage = mainPin.querySelector('.main__pin--image');
 
   var position;
 
@@ -47,14 +45,14 @@ window.pin = (function () {
       };
 
 
-      if ((pin.offsetTop - shift.y) < MAP_MAX_BOTTOM && (pin.offsetTop - shift.y) > MAP_MAX_TOP) {
-        pin.style.top = (pin.offsetTop - shift.y) + 'px';
+      if ((mainPin.offsetTop - shift.y) < MAP_MAX_BOTTOM && (mainPin.offsetTop - shift.y) > MAP_MAX_TOP) {
+        mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       }
-      if ((pin.offsetLeft - shift.x) < MAP_WIDTH && (pin.offsetLeft - shift.x) > 0) {
-        pin.style.left = (pin.offsetLeft - shift.x) + 'px';
+      if ((mainPin.offsetLeft - shift.x) < MAP_WIDTH && (mainPin.offsetLeft - shift.x) > 0) {
+        mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
       }
-      position = (pin.offsetLeft - shift.x) + ', ' + (pin.offsetTop - shift.y);
-      window.forms.address.value = ((pin.offsetLeft - shift.x) + ', ' + (pin.offsetTop + window.pin.getHeightTipOfPin() - shift.x));
+      position = (mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop - shift.y);
+      window.forms.address.value = ((mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop + window.pin.getHeightTipOfPin() - shift.x));
       window.forms.address.value = position;
     }
     // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
