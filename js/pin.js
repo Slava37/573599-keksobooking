@@ -6,16 +6,15 @@ window.pin = (function () {
   var HEIGHT_PIN = 44; // top: 100%; left: 50%;
   var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
 
-  var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
-
-  var START_POSITION_X = mainPin.offsetLeft;
-  var START_POSITION_Y = mainPin.offsetTop - HEIGHT_PIN / 2;
+  var START_POSITION_X = document.querySelector('.map').querySelector('.map__pin--main').offsetLeft;
+  var START_POSITION_Y = document.querySelector('.map').querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
 
   var AMOUNT_HOUSES = 8;
   var MAP_MAX_TOP = 150;
   var MAP_MAX_BOTTOM = 500;
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
 
+  var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapFilterContainer = document.querySelector('.map__filters-container');
   var userDialog = document.querySelector('.map');
