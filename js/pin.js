@@ -10,6 +10,7 @@ window.pin = (function () {
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
   var START_POSITION_X = document.querySelector('.map').querySelector('.map__pin--main').offsetLeft;
   var START_POSITION_Y = document.querySelector('.map').querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
+  var MAX_HOUSES = 5;
 
   var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
   var pinImage = mainPin.querySelector('.main__pin--image');
@@ -118,9 +119,11 @@ window.pin = (function () {
   /*
    * Возвращает фрагмент, созданный из массива меток.
    */
+
   function makeFragmentPins(houses) {
+    var lengthArr = MAX_HOUSES < houses.length ? MAX_HOUSES : houses.length;
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < houses.length; i++) {
+    for (var i = 0; i < lengthArr; i++) {
       var newPin = createButtonsPin(houses[i]);
       fragment.appendChild(newPin);
     }
@@ -151,23 +154,26 @@ window.pin = (function () {
   var guestsFilter = document.getElementById('housing-guests');
   var featuresFilter = document.querySelector('.map__filters').features;
 
+  function onFilter() {
+    window.card.hideCard();
+    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+  }
   // ...и добавим им обработчики.
   typeFilter.addEventListener('change', function (evt) {
     type = evt.target.value;
-    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
-
+    onFilter();
   });
   priceFilter.addEventListener('change', function (evt) {
     price = evt.target.value;
-    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+    onFilter();
   });
   roomsFilter.addEventListener('change', function (evt) {
     rooms = evt.target.value;
-    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+    onFilter();
   });
   guestsFilter.addEventListener('change', function (evt) {
     guests = evt.target.value;
-    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+    onFilter();
   });
   featuresFilter.forEach(function (value) {
     value.addEventListener('change', function (evt) {
@@ -186,7 +192,7 @@ window.pin = (function () {
         case 'conditioner': conditioner = feature.checked;
           break;
       }
-      window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+      onFilter();
     });
   });
 
