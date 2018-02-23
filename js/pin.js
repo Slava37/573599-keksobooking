@@ -2,9 +2,9 @@
 
 window.pin = (function () {
 
-  var WIDTH_PIN = 40; // position: absolute;
-  var HEIGHT_PIN = 44; // top: 100%; left: 50%;
-  var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
+  var WIDTH_PIN = 40;
+  var HEIGHT_PIN = 44;
+  var HEIGHT_TIP_OF_PIN = 18;
   var MAP_MAX_TOP = 150;
   var MAP_MAX_BOTTOM = 500;
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
