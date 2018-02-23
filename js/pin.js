@@ -18,7 +18,6 @@ window.pin = (function () {
 
   var position = getStartPositionPinAddress();
 
-
   // Реализация передвижения метки.
   pinImage.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
