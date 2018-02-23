@@ -16,7 +16,7 @@ window.pin = (function () {
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapFilterContainer = document.querySelector('.map__filters-container');
 
-  var position;
+  var position = getStartPositionPinAddress();
 
 
   // Реализация передвижения метки.
@@ -112,6 +112,7 @@ window.pin = (function () {
         popup.parentNode.removeChild(popup);
       }
       document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
+      window.card.closeButtonCard();
     });
     return pinElement;
   }
@@ -127,11 +128,15 @@ window.pin = (function () {
     return fragment;
   }
 
+  function onSuccess(data) {
+    removePins();
+    document.querySelector('.map').querySelector('.map__pins').appendChild(makeFragmentPins(data)); // Поставили метки обьявлений.
+  }
   return {
     getHeightPin: getHeightPin,
     getWidthPin: getWidthPin,
     getHeightTipOfPin: getHeightTipOfPin,
-    makeFragmentPins: makeFragmentPins,
+    onSuccess: onSuccess,
     getStartPositionPinAddress: getStartPositionPinAddress,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,

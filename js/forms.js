@@ -48,13 +48,8 @@ window.forms = (function () {
     window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
 
     // Создаем новый массив домов и заполняем его данными с сервера.
-    var newHouses;
-    window.backend.load(function (data) {
-      newHouses = data;
-      window.pin.removePins(); // Удалили старые метки.
-      userDialog.querySelector('.map__pins').appendChild(window.pin.makeFragmentPins(newHouses)); // Поставили метки обьявлений.
 
-    }, window.backend.onErrorMessage);
+    window.backend.load(window.pin.onSuccess, window.backend.onErrorMessage);
 
   }
 
