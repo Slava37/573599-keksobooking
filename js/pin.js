@@ -135,6 +135,7 @@ window.pin = (function () {
     getStartPositionPinAddress: getStartPositionPinAddress,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,
-    mainPin: mainPin
+    mainPin: mainPin,
+    makeFragmentPins: makeFragmentPins
   };
 })();
