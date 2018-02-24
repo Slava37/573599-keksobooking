@@ -2,11 +2,10 @@
 
 window.forms = (function () {
 
-  var AMOUNT_HOUSES = 8;
-
   var form = document.querySelector('.notice__form');
   var address = document.getElementById('address');
   var userDialog = document.querySelector('.map');
+  var fieldSets = form.querySelectorAll('fieldset');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
 
@@ -24,7 +23,7 @@ window.forms = (function () {
     }
     window.card.hideCard();
     window.pin.removePins();
-    form.querySelectorAll('fieldset').forEach(function (value) {
+    fieldSets.forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
     });
     form.classList.add('notice__form--disabled');
@@ -36,18 +35,23 @@ window.forms = (function () {
   }
   function enableForm() {
 
-    userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
-    window.forms.form.querySelectorAll('fieldset').forEach(function (value) {
-      value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
-    });
-    window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
-    window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
+    // Условие, при котором ряд действий выполняется только, если карта скрыта.
+    if (userDialog.classList.contains('map--faded')) {
+      userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
+      fieldSets.forEach(function (value) {
+        value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
+      });
+      window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
+      window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
+    }
 
     // Устанавливаем координаты адреса, на конце метки.
     window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
-    var newHouses = window.data.genHouses(AMOUNT_HOUSES); // Создали новый массив домов.
-    window.pin.removePins(); // Удалили старые метки.
-    userDialog.querySelector('.map__pins').appendChild(window.pin.makeFragmentPins(newHouses)); // Поставили метки обьявлений.
+
+    // Создаем новый массив домов и заполняем его данными с сервера.
+
+    window.backend.load(window.notification.onSuccess, window.notification.onMessage);
+
   }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.
@@ -119,6 +123,20 @@ window.forms = (function () {
 
   rooms.addEventListener('change', onSetRoomWithCapacity);
   capacity.addEventListener('change', onSetRoomWithCapacity);
+
+  // Создаем обработчик отправки формы на сервер.
+
+  form.addEventListener('submit', function (evt) {
+    var formData = new FormData(form);
+    var ourAddress = address.value;
+
+    formData.append('address', ourAddress);
+    window.backend.upload(formData, function () {
+      form.reset();
+      address.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
+    }, window.notification.onMessage);
+    evt.preventDefault();
+  });
 
   return {
     address: address,

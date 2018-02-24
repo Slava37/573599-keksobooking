@@ -2,6 +2,8 @@
 
 window.card = (function () {
 
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
   var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
   // Устанавливает значение жилья в зависимости от type DOM-элемента.
 
@@ -107,8 +109,31 @@ window.card = (function () {
 
     return mapCardElement;
   }
+
+  function onPopupEscPress(evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closePopup();
+    }
+  }
+  function closePopup() {
+    hideCard();
+    document.removeEventListener('keydown', onPopupEscPress);
+  }
+
+  function closeButtonCard() {
+    var closeButton = document.querySelector('.popup__close');
+
+    document.addEventListener('keydown', onPopupEscPress);
+    closeButton.addEventListener('click', closePopup);
+    closeButton.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ENTER_KEYCODE) {
+        closePopup();
+      }
+    });
+  }
   return {
     createMapCard: createMapCard,
-    hideCard: hideCard
+    hideCard: hideCard,
+    closeButtonCard: closeButtonCard
   };
 })();

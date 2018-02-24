@@ -2,25 +2,22 @@
 
 window.pin = (function () {
 
-  var WIDTH_PIN = 40; // position: absolute;
-  var HEIGHT_PIN = 44; // top: 100%; left: 50%;
-  var HEIGHT_TIP_OF_PIN = 18; // border-top-width: 22px - 4px
-
-  var START_POSITION_X = document.querySelector('.map').querySelector('.map__pin--main').offsetLeft;
-  var START_POSITION_Y = document.querySelector('.map').querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
-
-  var AMOUNT_HOUSES = 8;
+  var WIDTH_PIN = 40;
+  var HEIGHT_PIN = 44;
+  var HEIGHT_TIP_OF_PIN = 18;
   var MAP_MAX_TOP = 150;
   var MAP_MAX_BOTTOM = 500;
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
+  var START_POSITION_X = document.querySelector('.map').querySelector('.map__pin--main').offsetLeft;
+  var START_POSITION_Y = document.querySelector('.map').querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
 
   var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
+  var pinImage = mainPin.querySelector('.main__pin--image');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
   var mapFilterContainer = document.querySelector('.map__filters-container');
-  var userDialog = document.querySelector('.map');
-  var pinImage = mainPin.querySelector('.main__pin--image');
 
-  var position;
+  var position = getStartPositionPinAddress();
+
 
   // Реализация передвижения метки.
   pinImage.addEventListener('mousedown', function (evt) {
@@ -56,25 +53,13 @@ window.pin = (function () {
     }
     // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
 
-    function onMouseUp(upEvt) {
-      upEvt.preventDefault();
-      upEvt.preventDefault();
-      userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
-      window.forms.form.querySelectorAll('fieldset').forEach(function (value) {
-        value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
-      });
-      window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
-      window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
-
-      // Устанавливаем координаты адреса, на конце метки.
+    function onMouseUp() {
+      window.forms.enableForm();
       window.forms.address.value = position;
-      var newHouses = window.data.genHouses(AMOUNT_HOUSES); // Создали новый массив домов.
-      window.pin.removePins(); // Удалили старые метки.
-      userDialog.querySelector('.map__pins').appendChild(window.pin.makeFragmentPins(newHouses)); // Поставили метки обьявлений.
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     }
+
     document.addEventListener('mouseup', onMouseUp);
     document.addEventListener('mousemove', onMouseMove);
 
@@ -127,6 +112,7 @@ window.pin = (function () {
         popup.parentNode.removeChild(popup);
       }
       document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
+      window.card.closeButtonCard();
     });
     return pinElement;
   }
@@ -146,10 +132,10 @@ window.pin = (function () {
     getHeightPin: getHeightPin,
     getWidthPin: getWidthPin,
     getHeightTipOfPin: getHeightTipOfPin,
-    makeFragmentPins: makeFragmentPins,
     getStartPositionPinAddress: getStartPositionPinAddress,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,
-    mainPin: mainPin
+    mainPin: mainPin,
+    makeFragmentPins: makeFragmentPins
   };
 })();
