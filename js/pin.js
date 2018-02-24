@@ -128,15 +128,10 @@ window.pin = (function () {
     return fragment;
   }
 
-  function onSuccess(data) {
-    removePins();
-    document.querySelector('.map').querySelector('.map__pins').appendChild(makeFragmentPins(data)); // Поставили метки обьявлений.
-  }
   return {
     getHeightPin: getHeightPin,
     getWidthPin: getWidthPin,
     getHeightTipOfPin: getHeightTipOfPin,
-    onSuccess: onSuccess,
     getStartPositionPinAddress: getStartPositionPinAddress,
     removePins: removePins,
     setMainPinOnStart: setMainPinOnStart,
