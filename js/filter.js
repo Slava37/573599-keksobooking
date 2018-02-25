@@ -28,9 +28,9 @@ window.filter = (function () {
     }
   }
   // ...и добавим им обработчик, используя делегирование.
-  mapFilters.onchange = function (evt) {
+  mapFilters.addEventListener('change', function (evt) {
     var target = evt.target;
-    if (target !== this) {
+    if (target !== mapFilters) {
       switch (target.id) {
         case 'housing-type':
           type = target.value;
@@ -75,7 +75,7 @@ window.filter = (function () {
       }
       target = target.parentNode;
     }
-  };
+  });
 
   // Функция, возращающая результат фильтрации.
   function filterPins(houses) {

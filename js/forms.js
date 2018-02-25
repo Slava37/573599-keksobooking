@@ -50,7 +50,9 @@ window.forms = (function () {
     window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
     window.pin.removePins();
 
-    data = window.newData;
+    if (window.newData) {
+      data = window.newData;
+    }
     pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data))); // Поставили метки обьявлений.
 
     // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.

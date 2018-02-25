@@ -22,16 +22,19 @@ window.backend = (function () {
         default:
           onMessage('Oшибка!\nОтвет сервера: ' + xhr.status + ' ' + xhr.statusText);
       }
-      xhr.addEventListener('error', function () {
-        onMessage('Произошла ошибка соединения');
-      });
 
-      xhr.addEventListener('timeout', function () {
-        onMessage('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-
-      xhr.timeout = TIME_OUT_SERVER; // 10s
     });
+
+    xhr.addEventListener('error', function () {
+      onMessage('Произошла ошибка соединения');
+
+    });
+    xhr.addEventListener('timeout', function () {
+      onMessage('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.timeout = TIME_OUT_SERVER; // 10s
+
     xhr.open(type, url);
 
     if (type === 'POST') {
