@@ -6,6 +6,7 @@ window.forms = (function () {
   var address = document.getElementById('address');
   var userDialog = document.querySelector('.map');
   var fieldSets = form.querySelectorAll('fieldset');
+  var btnReset = form.querySelector('.form__reset');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
 
@@ -41,7 +42,7 @@ window.forms = (function () {
       fieldSets.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
-      window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
+      form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
       window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
     }
 
@@ -124,6 +125,9 @@ window.forms = (function () {
   rooms.addEventListener('change', onSetRoomWithCapacity);
   capacity.addEventListener('change', onSetRoomWithCapacity);
 
+  // Обработчик кнопки "Сбросить"
+  btnReset.addEventListener('click', disableForm);
+
   // Создаем обработчик отправки формы на сервер.
 
   form.addEventListener('submit', function (evt) {
@@ -140,7 +144,6 @@ window.forms = (function () {
 
   return {
     address: address,
-    form: form,
     enableForm: enableForm,
     disableForm: disableForm
   };
