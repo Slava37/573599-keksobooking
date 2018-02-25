@@ -40,7 +40,6 @@ window.pin = (function () {
         y: moveEvt.clientY
       };
 
-
       if ((mainPin.offsetTop - shift.y) < MAP_MAX_BOTTOM && (mainPin.offsetTop - shift.y) > MAP_MAX_TOP) {
         mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       }
@@ -51,8 +50,8 @@ window.pin = (function () {
       window.forms.address.value = ((mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop + window.pin.getHeightTipOfPin() - shift.x));
       window.forms.address.value = position;
     }
-    // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
 
+    // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
     function onMouseUp() {
       window.forms.enableForm();
       window.forms.address.value = position;
@@ -91,9 +90,8 @@ window.pin = (function () {
       pins[0].parentNode.removeChild(pins[1]); // Удаляем метки, кроме главной.
     }
   }
-  /*
- * Возаращает новую метку, созданный на основе данных параметра (объекта).
- */
+
+  // Возаращает новую метку, созданный на основе данных параметра (объекта).
   function createButtonsPin(house) {
     var pinElement = buttonTemplate.cloneNode(true);
     pinElement.querySelector('img').src = house.author.avatar;
@@ -116,10 +114,8 @@ window.pin = (function () {
     });
     return pinElement;
   }
-  /*
-   * Возвращает фрагмент, созданный из массива меток.
-   */
 
+  // Возвращает фрагмент, созданный из массива меток.
   function makeFragmentPins(houses) {
     var lengthArr = MAX_HOUSES < houses.length ? MAX_HOUSES : houses.length;
     var fragment = document.createDocumentFragment();

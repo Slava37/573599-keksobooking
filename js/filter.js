@@ -14,12 +14,18 @@ window.filter = (function () {
   var elevator = false;
   var conditioner = false;
 
+  // Коллбек для функции отрисовки пинов.
+  var onFilterChangeExternal = null;
+
   // Найдем в DOM родительский элемент всех фильтров...
-  var mapFilters = document.querySelector('.map__filters-container');
+  var mapFilters = document.querySelector('.map__filters');
 
   function onFilter() {
     window.card.hideCard();
-    window.debounce.setValue(window.backend.load(window.notification.onSuccess, window.backend.onErrorMessage));
+    window.pin.removePins();
+    if (typeof onFilterChangeExternal === 'function') {
+      window.debounce.setValue(onFilterChangeExternal);
+    }
   }
   // ...и добавим им обработчик, используя делегирование.
   mapFilters.onchange = function (evt) {
@@ -73,8 +79,7 @@ window.filter = (function () {
 
   // Функция, возращающая результат фильтрации.
   function filterPins(houses) {
-
-    var afterFilter = houses.filter(function (house) {
+    return houses.filter(function (house) {
       var boolPrice;
       switch (price) {
         case 'any':
@@ -102,10 +107,12 @@ window.filter = (function () {
 
       return boolPrice && boolType && boolRooms && boolGuests && boolWifi && boolDishwasher && boolParking && boolWasher && boolElevator && boolConditioner;
     });
-    return afterFilter;
   }
 
   return {
-    filterPins: filterPins
+    apply: filterPins,
+    setCallback: function (fn) {
+      onFilterChangeExternal = fn;
+    }
   };
 })();

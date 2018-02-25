@@ -7,16 +7,17 @@ window.forms = (function () {
   var userDialog = document.querySelector('.map');
   var fieldSets = form.querySelectorAll('fieldset');
   var btnReset = form.querySelector('.form__reset');
+  var pins = userDialog.querySelector('.map__pins');
+  var data = [];
 
   // Заполнение поля адреса координатами стартовой позиции метки.
-
   address.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
   address.setAttribute('disabled', true);
 
   // Доступная и недоступная форма.
   function disableForm() {
-    var currentCard = document.querySelector('article.map__card');
 
+    var currentCard = document.querySelector('article.map__card');
     document.querySelector('.map').classList.add('map--faded');
     form.reset(); // Сбрасываем поля до стартовых значений.
     if (currentCard !== null) {
@@ -28,12 +29,11 @@ window.forms = (function () {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
     });
     form.classList.add('notice__form--disabled');
-    //
+
     address.value = window.pin.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
     window.pin.setMainPinOnStart();
-
-
   }
+
   function enableForm() {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
@@ -48,15 +48,18 @@ window.forms = (function () {
 
     // Устанавливаем координаты адреса, на конце метки.
     window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
+    window.pin.removePins();
 
-    // Создаем новый массив домов и заполняем его данными с сервера.
+    data = window.newData;
+    pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data))); // Поставили метки обьявлений.
 
-    window.backend.load(window.notification.onSuccess, window.notification.onMessage);
-
+    // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
+    window.filter.setCallback(function () {
+      pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data)));
+    });
   }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.
-
   form.price.addEventListener('focus', function (evt) {
     var mySelect = form.type;
     for (var i = 0; i < mySelect.length; i++) {
@@ -80,7 +83,6 @@ window.forms = (function () {
   });
 
   // Зависимость время заезда и выезда.
-
   form.timein.addEventListener('change', function () {
     form.timeout.selectedIndex = form.timein.selectedIndex;
   });
@@ -129,7 +131,6 @@ window.forms = (function () {
   btnReset.addEventListener('click', disableForm);
 
   // Создаем обработчик отправки формы на сервер.
-
   form.addEventListener('submit', function (evt) {
     var formData = new FormData(form);
     var ourAddress = address.value;

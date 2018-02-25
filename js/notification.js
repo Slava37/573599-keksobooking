@@ -22,14 +22,16 @@ window.notification = (function () {
 
     node.textContent = message;
     document.body.insertAdjacentElement('afterbegin', node);
-    // Cooбщение исчезает спустя время после появления.
+
+    // Сообщение исчезает спустя время.
     setTimeout(function () {
       node.parentNode.removeChild(node);
     }, TIME_OUT_MESSAGE);
   };
+
+  // При успешном загрузке данных с сервера мы экспортируем экземпляр данных.
   function onSuccess(data) {
-    window.pin.removePins();
-    document.querySelector('.map').querySelector('.map__pins').appendChild(window.pin.makeFragmentPins(window.filter.filterPins(data))); // Поставили метки обьявлений.
+    window.newData = data.slice();
   }
   return {
     onSuccess: onSuccess,
