@@ -5,6 +5,7 @@ window.forms = (function () {
   var form = document.querySelector('.notice__form');
   var address = document.getElementById('address');
   var userDialog = document.querySelector('.map');
+  var fieldSets = form.querySelectorAll('fieldset');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
 
@@ -22,7 +23,7 @@ window.forms = (function () {
     }
     window.card.hideCard();
     window.pin.removePins();
-    form.querySelectorAll('fieldset').forEach(function (value) {
+    fieldSets.forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
     });
     form.classList.add('notice__form--disabled');
@@ -37,7 +38,7 @@ window.forms = (function () {
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
     if (userDialog.classList.contains('map--faded')) {
       userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
-      window.forms.form.querySelectorAll('fieldset').forEach(function (value) {
+      fieldSets.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
       window.forms.form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
@@ -49,7 +50,7 @@ window.forms = (function () {
 
     // Создаем новый массив домов и заполняем его данными с сервера.
 
-    window.backend.load(window.pin.onSuccess, window.backend.onErrorMessage);
+    window.backend.load(window.notification.onSuccess, window.notification.onMessage);
 
   }
 
@@ -126,15 +127,14 @@ window.forms = (function () {
   // Создаем обработчик отправки формы на сервер.
 
   form.addEventListener('submit', function (evt) {
-    var ourForm = document.querySelector('.notice__form');
-    var formData = new FormData(ourForm);
+    var formData = new FormData(form);
     var ourAddress = address.value;
 
     formData.append('address', ourAddress);
     window.backend.upload(formData, function () {
-      ourForm.reset();
+      form.reset();
       address.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
-    }, window.backend.onErrorMessage);
+    }, window.notification.onMessage);
     evt.preventDefault();
   });
 

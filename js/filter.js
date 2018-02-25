@@ -23,7 +23,7 @@ window.filter = (function () {
 
   function onFilter() {
     window.card.hideCard();
-    window.debounce.setValue(window.backend.load(onSuccess, window.backend.onErrorMessage));
+    window.debounce.setValue(window.backend.load(window.notification.onSuccess, window.backend.onErrorMessage));
   }
   // ...и добавим им обработчики.
   typeFilter.addEventListener('change', function (evt) {
@@ -64,7 +64,7 @@ window.filter = (function () {
   });
 
   // Функция, возращающая результат фильтрации.
-  function updatePins(houses) {
+  function filterPins(houses) {
     var sameType;
     if (type === 'any') {
       sameType = houses;
@@ -134,6 +134,6 @@ window.filter = (function () {
     return sameFeatures;
   }
   return {
-    updatePins: updatePins
+    filterPins: filterPins
   };
 })();
