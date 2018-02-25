@@ -14,54 +14,62 @@ window.filter = (function () {
   var elevator = false;
   var conditioner = false;
 
-  // Найдем в DOM все элементы формы фильтрации...
-  var typeFilter = document.getElementById('housing-type');
-  var priceFilter = document.getElementById('housing-price');
-  var roomsFilter = document.getElementById('housing-rooms');
-  var guestsFilter = document.getElementById('housing-guests');
-  var featuresFilter = document.querySelector('.map__filters').features;
+  // Найдем в DOM родительский элемент всех фильтров...
+  var mapFilters = document.querySelector('.map__filters-container');
 
   function onFilter() {
     window.card.hideCard();
     window.debounce.setValue(window.backend.load(window.notification.onSuccess, window.backend.onErrorMessage));
   }
-  // ...и добавим им обработчики.
-  typeFilter.addEventListener('change', function (evt) {
-    type = evt.target.value;
-    onFilter();
-  });
-  priceFilter.addEventListener('change', function (evt) {
-    price = evt.target.value;
-    onFilter();
-  });
-  roomsFilter.addEventListener('change', function (evt) {
-    rooms = evt.target.value;
-    onFilter();
-  });
-  guestsFilter.addEventListener('change', function (evt) {
-    guests = evt.target.value;
-    onFilter();
-  });
-  featuresFilter.forEach(function (value) {
-    value.addEventListener('change', function (evt) {
-      var feature = evt.target;
-      switch (feature.value) {
-        case 'wifi': wifi = feature.checked;
+  // ...и добавим им обработчик, используя делегирование.
+  mapFilters.onchange = function (evt) {
+    var target = evt.target;
+    if (target !== this) {
+      switch (target.id) {
+        case 'housing-type':
+          type = target.value;
+          onFilter();
           break;
-        case 'dishwasher': dishwasher = feature.checked;
+        case 'housing-price':
+          price = target.value;
+          onFilter();
           break;
-        case 'parking': parking = feature.checked;
+        case 'housing-rooms':
+          rooms = target.value;
+          onFilter();
           break;
-        case 'washer': washer = feature.checked;
+        case 'housing-guests':
+          guests = target.value;
+          onFilter();
           break;
-        case 'elevator': elevator = feature.checked;
+        case 'filter-wifi':
+          wifi = target.checked;
+          onFilter();
           break;
-        case 'conditioner': conditioner = feature.checked;
+        case 'filter-dishwasher':
+          dishwasher = target.checked;
+          onFilter();
+          break;
+        case 'filter-parking':
+          parking = target.checked;
+          onFilter();
+          break;
+        case 'filter-washer':
+          washer = target.checked;
+          onFilter();
+          break;
+        case 'filter-elevator':
+          elevator = target.checked;
+          onFilter();
+          break;
+        case 'filter-conditioner':
+          conditioner = target.checked;
+          onFilter();
           break;
       }
-      onFilter();
-    });
-  });
+      target = target.parentNode;
+    }
+  };
 
   // Функция, возращающая результат фильтрации.
   function filterPins(houses) {
