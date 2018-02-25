@@ -65,74 +65,38 @@ window.filter = (function () {
 
   // Функция, возращающая результат фильтрации.
   function filterPins(houses) {
-    var sameType;
-    if (type === 'any') {
-      sameType = houses;
-    } else {
-      sameType = houses.filter(function (house) { // Так как нам нужно компоновать фильтры, то мы будет пробегать каждый раз по меньшему массиву.
-        return house.offer.type === type;
-      });
-    }
 
-    // Сдесь вместо возврата, тужно взять sameType и также прогнать через фильтр, и так со всеми полями.
-    var samePrice;
-    if (price === 'any') {
-      samePrice = sameType;
-    } else {
-      samePrice = sameType.filter(function (house) { // Так как нам нужно компоновать фильтры, то мы будет пробегать каждый раз по меньшему массиву.
-        var bool;
-        switch (price) {
-          case 'low':
-            bool = house.offer.price < 10000;
-            break;
-          case 'middle':
-            bool = house.offer.price >= 10000 && house.offer.price < 50000;
-            break;
-          case 'high':
-            bool = house.offer.price >= 50000;
-            break;
-        }
-        return bool;
-      });
-    }
-    var sameRooms;
-    if (rooms === 'any') {
-      sameRooms = samePrice;
-    } else {
-      sameRooms = samePrice.filter(function (house) { // Так как нам нужно компоновать фильтры, то мы будет пробегать каждый раз по меньшему массиву.
-        return house.offer.rooms === Number(rooms);
-      });
-    }
-    var sameGuests;
-    if (guests === 'any') {
-      sameGuests = sameRooms;
-    } else {
-      sameGuests = sameRooms.filter(function (house) {
-        return house.offer.guests === Number(guests);
-      });
-    }
-
-    var sameFeatures = sameGuests.slice(); // При фильтрации необходимо пройти по всем элементам, поэтому создаем новый массив sameFeatures. Он и будет изменяться.
-
-    // Функция берет за параметры фичу, и фильтрует массив sameFeatures.
-    function filterFeatures(variable, feature) {
-      if (variable === true) {
-        sameFeatures = sameFeatures.filter(function (house) {
-          return house.offer.features.join(' ').includes(feature);
-        });
+    var afterFilter = houses.filter(function (house) {
+      var boolPrice;
+      switch (price) {
+        case 'any':
+          boolPrice = true;
+          break;
+        case 'low':
+          boolPrice = house.offer.price < 10000;
+          break;
+        case 'middle':
+          boolPrice = house.offer.price >= 10000 && house.offer.price < 50000;
+          break;
+        case 'high':
+          boolPrice = house.offer.price >= 50000;
+          break;
       }
-    }
+      var boolType = type === 'any' ? true : house.offer.type === type;
+      var boolRooms = rooms === 'any' ? true : house.offer.rooms === Number(rooms);
+      var boolGuests = guests === 'any' ? true : house.offer.guests === Number(guests);
+      var boolWifi = wifi === false ? true : house.offer.features.join(' ').includes('wifi');
+      var boolDishwasher = dishwasher === false ? true : house.offer.features.join(' ').includes('dishwasher');
+      var boolParking = parking === false ? true : house.offer.features.join(' ').includes('parking');
+      var boolWasher = washer === false ? true : house.offer.features.join(' ').includes('washer');
+      var boolElevator = elevator === false ? true : house.offer.features.join(' ').includes('elevator');
+      var boolConditioner = conditioner === false ? true : house.offer.features.join(' ').includes('conditioner');
 
-    if (sameFeatures.length !== 0) {
-      filterFeatures(wifi, 'wifi');
-      filterFeatures(dishwasher, 'dishwasher');
-      filterFeatures(parking, 'parking');
-      filterFeatures(washer, 'washer');
-      filterFeatures(elevator, 'elevator');
-      filterFeatures(conditioner, 'conditioner');
-    }
-    return sameFeatures;
+      return boolPrice && boolType && boolRooms && boolGuests && boolWifi && boolDishwasher && boolParking && boolWasher && boolElevator && boolConditioner;
+    });
+    return afterFilter;
   }
+
   return {
     filterPins: filterPins
   };
