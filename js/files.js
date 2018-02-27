@@ -5,13 +5,15 @@ window.files = (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var fileChooserAvatar = document.getElementById('avatar');
-  var avatarPhoto = document.querySelector('.notice__photo');
-  var avatarUpload = avatarPhoto.querySelector('.drop-zone');
+  var noticePhoto = document.querySelector('.notice__photo');
+  var avatarUpload = noticePhoto.querySelector('.drop-zone');
 
   var fileChooserPhotos = document.getElementById('images');
-  var photosUpload = document.querySelector('.form__photo-container').querySelector('.drop-zone');
+  var photoContainer = document.querySelector('.form__photo-container');
+  var photosUpload = photoContainer.querySelector('.drop-zone');
+  var uploadBlock = photoContainer.querySelector('.upload');
 
-  var preview = avatarPhoto.querySelector('img');
+  var preview = noticePhoto.querySelector('img');
 
   // Создадим логику загрузки файла загрузку файла для аватарки пользователя и фото жилья .
   function getOutput(evt) {
@@ -59,22 +61,34 @@ window.files = (function () {
     for (var i = 0; i < output.length; i++) {
 
       var reader = new FileReader();
-      reader.addEventListener('load', (function (newFile) {
+      reader.addEventListener('load', (function (file) {
         return function () {
-          console.log(newFile.name);
+          // Добавление блока с классом .form__photo
+          var div = document.createElement('div');
+          div.classList.add('form__photo');
+          div.style = 'margin-right: 2px; display: inline-block;';
+
+          var img = document.createElement('img');
+          img.src = file.result;
+          img.width = '66';
+          img.draggable = true;
+          img.zIndex = '100';
+          div.appendChild(img);
+          photoContainer.insertBefore(div, uploadBlock);
         };
-      })(output[i]));
+      })(reader));
       reader.readAsDataURL(output[i]);
     }
 
 
   }
-
+  // При отпускании мыши и завершении перетаскивания мы копируем перетаскиваемые файлы.
   function onDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';
   }
+
   fileChooserAvatar.addEventListener('change', onChooserFileAvatar);
   avatarUpload.addEventListener('dragover', onDragOver, false);
   avatarUpload.addEventListener('drop', onChooserFileAvatar, false);
