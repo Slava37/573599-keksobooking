@@ -4,11 +4,8 @@ window.forms = (function () {
 
   var form = document.querySelector('.notice__form');
   var address = document.getElementById('address');
-  var userDialog = document.querySelector('.map');
   var fieldSets = form.querySelectorAll('fieldset');
   var btnReset = form.querySelector('.form__reset');
-  var pins = userDialog.querySelector('.map__pins');
-  var data = [];
 
   // Заполнение поля адреса координатами стартовой позиции метки.
   address.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
@@ -32,13 +29,15 @@ window.forms = (function () {
 
     address.value = window.pin.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
     window.pin.setMainPinOnStart();
+    window.resetOutputs();
+    window.setFiltersDisabled(true);
   }
 
   function enableForm() {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
-    if (userDialog.classList.contains('map--faded')) {
-      userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
+    if (window.userDialog.classList.contains('map--faded')) {
+      window.userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
       fieldSets.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
@@ -49,16 +48,14 @@ window.forms = (function () {
     // Устанавливаем координаты адреса, на конце метки.
     window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
     window.pin.removePins();
-
-    if (window.newData) {
-      data = window.newData;
+    // Создаем новый массив домов и заполняем его данными с сервера.
+    if (!window.newData) {
+      window.backend.load(window.notification.onSuccess, window.notification.onMessage);
+    } else {
+      window.notification.onSuccess(window.newData);
     }
-    pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data))); // Поставили метки обьявлений.
 
-    // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
-    window.filter.setCallback(function () {
-      pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data)));
-    });
+
   }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.

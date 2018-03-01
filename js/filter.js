@@ -20,6 +20,23 @@ window.filter = (function () {
   // Найдем в DOM родительский элемент всех фильтров...
   var mapFilters = document.querySelector('.map__filters');
 
+  // Фильтры должны быть доступны только после загрузке данных с сервера и отрисовки пинов.
+  window.setFiltersDisabled = function (bool) {
+    var selects = mapFilters.querySelectorAll('select');
+    var fieldset = mapFilters.querySelector('fieldset');
+    if (bool === true) {
+
+      selects.forEach(function (value) {
+        value.setAttribute('disabled', true);
+      });
+      fieldset.setAttribute('disabled', true);
+    } else {
+      selects.forEach(function (value) {
+        value.removeAttribute('disabled', true);
+      });
+      fieldset.removeAttribute('disabled');
+    }
+  };
   function onFilter() {
     window.card.hideCard();
     window.pin.removePins();

@@ -1,3 +1,4 @@
+
 'use strict';
 
 window.card = (function () {
@@ -5,23 +6,19 @@ window.card = (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
   var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
-  // Устанавливает значение жилья в зависимости от type DOM-элемента.
 
+  // Устанавливает значение жилья в зависимости от type DOM-элемента.
   function getOfferType(currentType) {
     var type = currentType;
-    var name;
     switch (type) {
       case 'flat':
-        name = 'Квартира';
-        break;
+        return 'Квартира';
       case 'bungalo':
-        name = 'Бунгало';
-        break;
+        return 'Бунгало';
       case 'house':
-        name = 'Дом';
-        break;
+        return 'Дом';
+      default: return '';
     }
-    return name;
   }
 
   // Скрывает карточку.
@@ -32,9 +29,7 @@ window.card = (function () {
     }
   }
 
-  /*
-   * Возаращает новое обьявление, созданный на основе данных параметра (объекта).
-   */
+  // Возаращает новое обьявление, созданный на основе данных параметра (объекта).
   function createMapCard(house) {
     var mapCardElement = mapCardTemplate.cloneNode(true);
     mapCardElement.id = 'new_card';
@@ -57,10 +52,10 @@ window.card = (function () {
     // Очистим список и добавим свои элементы.
 
     var personFeatures = mapCardElement.querySelector('.popup__features');
-    var featuresAllLi = personFeatures.getElementsByTagName('li');
+    var featuresLiElements = personFeatures.getElementsByTagName('li');
 
     for (var i = 0; i < window.data.featuresLength; i++) {
-      featuresAllLi[0].parentNode.removeChild(featuresAllLi[0]);
+      featuresLiElements[0].parentNode.removeChild(featuresLiElements[0]);
     }
 
     var featureClass;

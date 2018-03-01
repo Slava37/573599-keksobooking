@@ -15,6 +15,15 @@ window.files = (function () {
 
   var preview = noticePhoto.querySelector('img');
 
+  // Удаляет загруженные фото и выставляет дефолтное значение аватара.
+  window.resetOutputs = function () {
+    preview.src = 'img/muffin.png';
+    var photos = photoContainer.querySelectorAll('.form__photo');
+    photos.forEach(function (value) {
+      value.parentNode.removeChild(value);
+    });
+  };
+
   // Создадим логику загрузки файла загрузку файла для аватарки пользователя и фото жилья .
   function getOutput(evt) {
     var file;

@@ -3,6 +3,8 @@
 window.notification = (function () {
 
   var TIME_OUT_MESSAGE = 5000;
+  window.userDialog = document.querySelector('.map');
+  var pins = window.userDialog.querySelector('.map__pins');
 
   var onMessage = function (message) {
     // Если сообщение сущетвует, то оно удаляется, и создается новое при новом запросе.
@@ -36,6 +38,14 @@ window.notification = (function () {
   // При успешном загрузке данных с сервера мы экспортируем экземпляр данных.
   function onSuccess(data) {
     window.newData = data.slice();
+    pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(window.newData))); // Поставили метки обьявлений.
+
+    window.setFiltersDisabled(false);
+
+    // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
+    window.filter.setCallback(function () {
+      pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(window.newData)));
+    });
   }
   return {
     onSuccess: onSuccess,

@@ -52,8 +52,6 @@ window.backend = (function () {
   function load(onLoad, onMessage) {
     makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, onLoad, onMessage);
   }
-  // Создаем новый массив домов и заполняем его данными с сервера.
-  load(window.notification.onSuccess, window.notification.onMessage);
 
   return {
     upload: upload,
