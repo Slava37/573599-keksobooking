@@ -16,10 +16,13 @@
   var pinImageElement = mainPinElement.querySelector('.main__pin--image');
   var pinsElement = window.mapElement.querySelector('.map__pins');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
-  var position = '';
 
+  window.getStartPositionPinAddress = function () {
+    return START_POSITION_X + ', ' + START_POSITION_Y;
+  };
   // Реализация передвижения метки.
   pinImageElement.addEventListener('mousedown', function (evt) {
+    var position = window.getStartPositionPinAddress();
     evt.preventDefault();
 
     var startCoords = {
@@ -65,10 +68,6 @@
   window.setMainPinOnStart = function () {
     mainPinElement.style.left = START_POSITION_X + 'px'; // ставим метку на стартовую позицию.
     mainPinElement.style.top = START_POSITION_Y + 'px';
-  };
-
-  window.getStartPositionPinAddress = function () {
-    return START_POSITION_X + ', ' + START_POSITION_Y;
   };
 
   // Удаляет метки.

@@ -48,7 +48,7 @@
       }
     });
     return pictureFiles;
-  }
+  };
 
   // Обработчик на действия а аватаркой.
   var onChooserFileAvatar = function (evt) {
@@ -60,7 +60,20 @@
       previewElement.src = reader.result;
     });
     reader.readAsDataURL(output[0]);
-  }
+  };
+  // Начало перетаскивания фотографии(сортировка).
+  var dragPhotoStart = function (ev) {
+    window.currSrc = ev.target;
+
+  };
+  // Окончание перетаскивание фотографии(сортировка).
+  var dragPhotoDrop = function (ev) {
+    var data = ev.dataTransfer.getData('Text');
+    var img = ev.target;
+    window.currSrc.src = img.src;
+    img.src = data;
+    ev.stopPropagation();
+  };
   // Обработчик на действия с фотографиями.
   var onChooserFilePhotos = function (evt) {
     evt.stopPropagation();
@@ -78,22 +91,27 @@
 
           var imgElement = document.createElement('img');
           imgElement.src = fileSrc.result;
+          imgElement.draggable = true;
           imgElement.width = '66';
-          imgElement.zIndex = '100';
+          imgElement.zIndex = '3';
           divElement.appendChild(imgElement);
           photoContainerElement.insertBefore(divElement, uploadBlockElement);
         };
       })(reader));
       reader.readAsDataURL(file);
     });
-  }
+  };
 
   // При отпускании мыши и завершении перетаскивания мы копируем перетаскиваемые файлы.
   var onDragOver = function (evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';
-  }
+  };
+
+  photoContainerElement.addEventListener('mousedown', dragPhotoStart);
+  photoContainerElement.addEventListener('dragover', onDragOver, false);
+  photoContainerElement.addEventListener('drop', dragPhotoDrop, false);
 
   chooserAvatarElement.addEventListener('change', onChooserFileAvatar);
   avatarUploadElement.addEventListener('dragover', onDragOver, false);
