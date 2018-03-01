@@ -9,7 +9,7 @@ window.card = (function () {
   var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 
   // Устанавливает значение жилья в зависимости от type DOM-элемента.
-  function getOfferType(currentType) {
+  var getOfferType = function (currentType) {
     var type = currentType;
     switch (type) {
       case 'flat':
@@ -23,7 +23,7 @@ window.card = (function () {
   }
 
   // Скрывает карточку.
-  function hideCard() {
+  window.hideCard = function () {
     var currentCardElement = document.querySelector('article.map__card');
     if (currentCardElement !== null) {
       currentCardElement.style.display = 'none'; // Скрываем карточку.
@@ -31,7 +31,7 @@ window.card = (function () {
   }
 
   // Возаращает новое обьявление, созданный на основе данных параметра (объекта).
-  function createMapCard(house) {
+  var createMapCard = function (house) {
     var mapCardElement = mapCardTemplate.cloneNode(true);
     mapCardElement.id = 'new_card';
 
@@ -91,7 +91,7 @@ window.card = (function () {
     }
   }
   function closePopup() {
-    hideCard();
+    window.hideCard();
     document.removeEventListener('keydown', onPopupEscPress);
   }
 
@@ -109,17 +109,12 @@ window.card = (function () {
   window.showCard = function (house) {
     var mapFilterContainer = document.querySelector('.map__filters-container');
     var fragmentCard = document.createDocumentFragment();
-    fragmentCard.appendChild(window.card.createMapCard(house));
+    fragmentCard.appendChild(createMapCard(house));
     var popup = document.getElementById('new_card');
     if (popup !== null) {
       popup.parentNode.removeChild(popup);
     }
     document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
-    window.card.closeButtonCard();
-  }
-  return {
-    createMapCard: createMapCard,
-    hideCard: hideCard,
-    closeButtonCard: closeButtonCard
+    closeButtonCard();
   };
 })();

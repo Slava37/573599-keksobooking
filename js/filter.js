@@ -22,6 +22,7 @@ window.filter = (function () {
 
   // Фильтры должны быть доступны только после загрузке данных с сервера и отрисовки пинов.
   window.setFiltersDisabled = function (bool) {
+
     var selects = mapFilters.querySelectorAll('select');
     var fieldset = mapFilters.querySelector('fieldset');
     if (bool === true) {
@@ -30,6 +31,7 @@ window.filter = (function () {
         value.setAttribute('disabled', true);
       });
       fieldset.setAttribute('disabled', true);
+      mapFilters.reset();
     } else {
       selects.forEach(function (value) {
         value.removeAttribute('disabled', true);
@@ -38,7 +40,7 @@ window.filter = (function () {
     }
   };
   function onFilter() {
-    window.card.hideCard();
+    window.hideCard();
     window.pin.removePins();
     if (typeof onFilterChangeExternal === 'function') {
       window.callDebounce(onFilterChangeExternal);

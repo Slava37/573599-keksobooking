@@ -6,7 +6,7 @@ window.forms = (function () {
   var addressElement = document.getElementById('address');
   var fieldSetsElement = formElement.querySelectorAll('fieldset');
   var btnResetElement = formElement.querySelector('.form__reset');
-  var userDialog = document.querySelector('.map');
+  var mapElement = document.querySelector('.map');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
   addressElement.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
@@ -19,9 +19,8 @@ window.forms = (function () {
     document.querySelector('.map').classList.add('map--faded');
     formElement.reset(); // Сбрасываем поля до стартовых значений.
     if (currentCardElement !== null) {
-      currentCardElement.style.display = 'none'; // Скрываем карточку.
+      window.hideCard(); // Скрываем карточку.
     }
-    window.card.hideCard();
     window.pin.removePins();
     fieldSetsElement.forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
@@ -37,8 +36,8 @@ window.forms = (function () {
   function enableForm() {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
-    if (userDialog.classList.contains('map--faded')) {
-      userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
+    if (mapElement.classList.contains('map--faded')) {
+      mapElement.classList.remove('map--faded'); // Сняли класс у активной карты.
       fieldSetsElement.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
@@ -84,8 +83,8 @@ window.forms = (function () {
     formElement.timein.selectedIndex = formElement.timeout.selectedIndex;
   });
 
-  var rooms = formElement.rooms;
-  var capacity = formElement.capacity;
+  var roomsElement = formElement.rooms;
+  var capacityElement = formElement.capacity;
 
   // Задаёт синхронизацию поля количества комнать и поля колличества гостей.
   function onSetRoomWithCapacity(evt) {
@@ -93,33 +92,33 @@ window.forms = (function () {
     var capacityCount;
     var room;
 
-    if (evt.target === rooms) {
-      capacityCount = capacity.options[capacity.selectedIndex].value;
+    if (evt.target === roomsElement) {
+      capacityCount = capacityElement.options[capacityElement.selectedIndex].value;
       room = evt.target.value;
-    } else if (evt.target === capacity) {
+    } else if (evt.target === capacityElement) {
       capacityCount = evt.target.value;
-      room = rooms.options[rooms.selectedIndex].value;
+      room = roomsElement.options[roomsElement.selectedIndex].value;
     }
 
     if (room === '1' && capacityCount !== '1') {
-      rooms.setCustomValidity('Доступна для 1 гостя');
+      roomsElement.setCustomValidity('Доступна для 1 гостя');
 
     } else if (room === '2' && capacityCount !== '2' && capacityCount !== '1') {
-      rooms.setCustomValidity('Доступна для 1 или 2 гостей');
+      roomsElement.setCustomValidity('Доступна для 1 или 2 гостей');
 
     } else if (room === '3' && capacityCount !== '3' && capacityCount !== '2' && capacityCount !== '1') {
-      rooms.setCustomValidity('Доступна для 1, 2 или 3 гостей');
+      roomsElement.setCustomValidity('Доступна для 1, 2 или 3 гостей');
 
     } else if (room === '100' && capacityCount !== '0') {
-      rooms.setCustomValidity('Не для гостей');
+      roomsElement.setCustomValidity('Не для гостей');
 
     } else {
-      rooms.setCustomValidity('');
+      roomsElement.setCustomValidity('');
     }
   }
 
-  rooms.addEventListener('change', onSetRoomWithCapacity);
-  capacity.addEventListener('change', onSetRoomWithCapacity);
+  roomsElement.addEventListener('change', onSetRoomWithCapacity);
+  capacityElement.addEventListener('change', onSetRoomWithCapacity);
 
   // Обработчик кнопки "Сбросить"
   btnResetElement.addEventListener('click', disableForm);
