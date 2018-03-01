@@ -1,11 +1,10 @@
 'use strict';
 
-window.notification = (function () {
+(function () {
 
   var TIME_OUT_MESSAGE = 5000;
-  var pins = document.querySelector('.map').querySelector('.map__pins');
 
-  var onMessage = function (message) {
+  var setMessageProperty = function (message, color, height) {
     // Если сообщение сущетвует, то оно удаляется, и создается новое при новом запросе.
     var currentNode = document.getElementById('notification');
     if (currentNode !== null) {
@@ -19,35 +18,21 @@ window.notification = (function () {
     node.style.left = '10%';
     node.style.top = '2%';
     node.style.width = '150px';
-    node.style.height = '40px';
-
+    node.style.height = height;
     node.textContent = message;
-    if (message !== 'Успешно!') {
-      node.style.color = 'red';
-      node.style.height = '130px';
-    }
+    node.style.color = color;
     document.body.insertAdjacentElement('afterbegin', node);
-
     // Сообщение исчезает спустя время.
     setTimeout(function () {
       node.parentNode.removeChild(node);
     }, TIME_OUT_MESSAGE);
   };
 
-  // При успешном загрузке данных с сервера мы экспортируем экземпляр данных.
-  function onSuccess(data) {
-    window.newData = data.slice();
-    pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(window.newData))); // Поставили метки обьявлений.
+  window.showInfo = function (message) {
+    setMessageProperty(message, 'green', '40px');
+  };
 
-    window.setFiltersDisabled(false);
-
-    // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
-    window.filter.setCallback(function () {
-      pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(window.newData)));
-    });
-  }
-  return {
-    onSuccess: onSuccess,
-    onMessage: onMessage
+  window.showError = function (message) {
+    setMessageProperty(message, 'red', '130px');
   };
 })();

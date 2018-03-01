@@ -4,37 +4,34 @@ window.backend = (function () {
 
   var TIME_OUT_SERVER = 10000;
   var SUCCESS_STATUS = 200;
+  // Будет часто использоваться в других модулях, для удобства определим для глобальной области видимости.
+  window.mapElement = document.querySelector('.map');
 
   // Реализация запроса к серверу в зависимости от типа запроса.
-  function makeRequest(type, url, data, onLoad, onMessage) {
+  function makeRequest(type, url, data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       switch (xhr.status) {
         case SUCCESS_STATUS:
           if (type === 'POST') {
-            onLoad();
-            onMessage('Успешно!');
+            onLoad('Успешно!');
           } else {
-            onLoad(xhr.response);
+            window.newData = xhr.response;
+            window.renderPins();
           }
           break;
         default:
-          onMessage('Oшибка!\nОтвет сервера: ' + xhr.status + ' ' + xhr.statusText);
+          onError('Oшибка!\nОтвет сервера: ' + xhr.status + ' ' + xhr.statusText);
       }
-
     });
-
     xhr.addEventListener('error', function () {
-      onMessage('Произошла ошибка соединения');
-
+      onError('Произошла ошибка соединения');
     });
     xhr.addEventListener('timeout', function () {
-      onMessage('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
-
     xhr.timeout = TIME_OUT_SERVER; // 10s
-
     xhr.open(type, url);
 
     if (type === 'POST') {
@@ -44,13 +41,13 @@ window.backend = (function () {
     }
   }
   // Функция загрузки данных формы на сервер Академии.
-  function upload(data, onLoad, onMessage) {
-    makeRequest('POST', 'https://js.dump.academy/keksobooking', data, onLoad, onMessage);
+  function upload(data, onLoad, onError) {
+    makeRequest('POST', 'https://js.dump.academy/keksobooking', data, onLoad, onError);
   }
 
   // Функция загрузки данных с сервера Академии.
-  function load(onLoad, onMessage) {
-    makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, onLoad, onMessage);
+  function load(onError) {
+    makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, null, onError);
   }
 
   return {

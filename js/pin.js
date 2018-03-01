@@ -8,13 +8,15 @@ window.pin = (function () {
   var MAP_MAX_TOP = 150;
   var MAP_MAX_BOTTOM = 500;
   var MAP_WIDTH = document.querySelector('.map__pins').offsetWidth;
-  var START_POSITION_X = document.querySelector('.map').querySelector('.map__pin--main').offsetLeft;
-  var START_POSITION_Y = document.querySelector('.map').querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
+  var START_POSITION_X = window.mapElement.querySelector('.map__pin--main').offsetLeft;
+  var START_POSITION_Y = window.mapElement.querySelector('.map__pin--main').offsetTop - HEIGHT_PIN / 2;
   var MAX_HOUSES = 5;
 
-  var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
+  var mainPin = window.mapElement.querySelector('.map__pin--main');
+  var address = document.getElementById('address');
   var pinImage = mainPin.querySelector('.main__pin--image');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
+  var pins = window.mapElement.querySelector('.map__pins');
 
   var position = getStartPositionPinAddress();
 
@@ -46,14 +48,14 @@ window.pin = (function () {
         mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
       }
       position = (mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop - shift.y);
-      window.forms.address.value = ((mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop + window.pin.getHeightTipOfPin() - shift.x));
-      window.forms.address.value = position;
+      address.value = ((mainPin.offsetLeft - shift.x) + ', ' + (mainPin.offsetTop + window.pin.getHeightTipOfPin() - shift.x));
+      address.value = position;
     }
 
     // Обработка отпускания кнопки мыши при перетаскивании, появляется активное окно.
     function onMouseUp() {
       window.forms.enableForm();
-      window.forms.address.value = position;
+      address.value = position;
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     }
@@ -83,10 +85,10 @@ window.pin = (function () {
 
   // Удаляет метки.
   function removePins() {
-    var pins = document.querySelector('.map__pins').getElementsByTagName('button');
-    var pinsArrLength = pins.length;
+    var pinsElement = document.querySelector('.map__pins').getElementsByTagName('button');
+    var pinsArrLength = pinsElement.length;
     for (var i = 1; i < pinsArrLength; i++) {
-      pins[0].parentNode.removeChild(pins[1]); // Удаляем метки, кроме главной.
+      pinsElement[0].parentNode.removeChild(pinsElement[1]); // Удаляем метки, кроме главной.
     }
   }
 
@@ -117,7 +119,18 @@ window.pin = (function () {
     }
     return fragment;
   }
+  // При успешном загрузке данных с сервера мы экспортируем экземпляр данных.
+  window.renderPins = function () {
+    var data = window.newData.slice();
+    pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data))); // Поставили метки обьявлений.
 
+    window.setFiltersDisabled(false);
+
+    // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
+    window.filter.setCallback(function () {
+      pins.appendChild(window.pin.makeFragmentPins(window.filter.apply(data)));
+    });
+  };
   return {
     getHeightPin: getHeightPin,
     getWidthPin: getWidthPin,

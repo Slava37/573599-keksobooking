@@ -6,7 +6,6 @@ window.forms = (function () {
   var addressElement = document.getElementById('address');
   var fieldSetsElement = formElement.querySelectorAll('fieldset');
   var btnResetElement = formElement.querySelector('.form__reset');
-  var mapElement = document.querySelector('.map');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
   addressElement.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
@@ -36,23 +35,23 @@ window.forms = (function () {
   function enableForm() {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
-    if (mapElement.classList.contains('map--faded')) {
-      mapElement.classList.remove('map--faded'); // Сняли класс у активной карты.
+    if (window.mapElement.classList.contains('map--faded')) {
+      window.mapElement.classList.remove('map--faded'); // Сняли класс у активной карты.
       fieldSetsElement.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
       formElement.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
-      window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
+      addressElement.setAttribute('disabled', true); // Поле адреса всегда недоступно.
     }
 
     // Устанавливаем координаты адреса, на конце метки.
-    window.forms.address.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
+    addressElement.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
     window.pin.removePins();
     // Создаем новый массив домов и заполняем его данными с сервера.
     if (!window.newData) {
-      window.backend.load(window.notification.onSuccess, window.notification.onMessage);
+      window.backend.load(window.showError);
     } else {
-      window.notification.onSuccess(window.newData);
+      window.renderPins();
     }
   }
 
@@ -125,20 +124,19 @@ window.forms = (function () {
 
   // Создаем обработчик отправки формы на сервер.
   formElement.addEventListener('submit', function (evt) {
+    evt.preventDefault();
     var formData = new FormData(formElement);
     var ourAddress = addressElement.value;
 
     formData.append('address', ourAddress);
-    window.backend.upload(formData, function () {
+    window.backend.upload(formData, function (message) {
       formElement.reset();
+      window.showInfo(message);
       addressElement.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
-    }, window.notification.onMessage);
-    evt.preventDefault();
+    }, window.showError);
   });
 
   return {
-    address: addressElement,
-    enableForm: enableForm,
-    disableForm: disableForm
+    enableForm: enableForm
   };
 })();
