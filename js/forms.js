@@ -62,25 +62,21 @@ window.forms = (function () {
   }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.
-  form.price.addEventListener('focus', function (evt) {
+  form.type.addEventListener('change', function () {
     var mySelect = form.type;
-    for (var i = 0; i < mySelect.length; i++) {
-      if (mySelect.options[i].selected) {
-        switch (mySelect.options[i].value) {
-          case 'flat':
-            evt.currentTarget.setAttribute('min', 1000);
-            break;
-          case 'bungalo':
-            evt.currentTarget.setAttribute('min', 0);
-            break;
-          case 'house':
-            evt.currentTarget.setAttribute('min', 5000);
-            break;
-          case 'palace':
-            evt.currentTarget.setAttribute('min', 10000);
-            break;
-        }
-      }
+    switch (mySelect.value) {
+      case 'flat':
+        form.price.setAttribute('min', 1000);
+        break;
+      case 'bungalo':
+        form.price.setAttribute('min', 0);
+        break;
+      case 'house':
+        form.price.setAttribute('min', 5000);
+        break;
+      case 'palace':
+        form.price.setAttribute('min', 10000);
+        break;
     }
   });
 

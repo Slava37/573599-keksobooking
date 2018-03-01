@@ -18,9 +18,13 @@ window.notification = (function () {
     node.style.left = '10%';
     node.style.top = '2%';
     node.style.width = '150px';
-    node.style.height = '130px';
+    node.style.height = '40px';
 
     node.textContent = message;
+    if (message !== 'Успешно!') {
+      node.style.color = 'red';
+      node.style.height = '130px';
+    }
     document.body.insertAdjacentElement('afterbegin', node);
 
     // Сообщение исчезает спустя время.

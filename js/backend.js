@@ -14,7 +14,7 @@ window.backend = (function () {
         case SUCCESS_STATUS:
           if (type === 'POST') {
             onLoad();
-            onMessage('Успешно!\nОтвет сервера: ' + xhr.status + ' ' + xhr.statusText);
+            onMessage('Успешно!');
           } else {
             onLoad(xhr.response);
           }

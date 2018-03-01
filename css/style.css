@@ -283,6 +283,7 @@ textarea:focus
 
 .map__pin--main
 {
+    z-index: 2;
     top: 375px;
     left: 50%;
 
