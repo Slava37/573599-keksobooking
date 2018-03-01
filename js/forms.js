@@ -2,32 +2,33 @@
 
 window.forms = (function () {
 
-  var form = document.querySelector('.notice__form');
-  var address = document.getElementById('address');
-  var fieldSets = form.querySelectorAll('fieldset');
-  var btnReset = form.querySelector('.form__reset');
+  var formElement = document.querySelector('.notice__form');
+  var addressElement = document.getElementById('address');
+  var fieldSetsElement = formElement.querySelectorAll('fieldset');
+  var btnResetElement = formElement.querySelector('.form__reset');
+  var userDialog = document.querySelector('.map');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
-  address.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
-  address.setAttribute('disabled', true);
+  addressElement.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
+  addressElement.setAttribute('disabled', true);
 
   // Доступная и недоступная форма.
   function disableForm() {
 
-    var currentCard = document.querySelector('article.map__card');
+    var currentCardElement = document.querySelector('article.map__card');
     document.querySelector('.map').classList.add('map--faded');
-    form.reset(); // Сбрасываем поля до стартовых значений.
-    if (currentCard !== null) {
-      currentCard.style.display = 'none'; // Скрываем карточку.
+    formElement.reset(); // Сбрасываем поля до стартовых значений.
+    if (currentCardElement !== null) {
+      currentCardElement.style.display = 'none'; // Скрываем карточку.
     }
     window.card.hideCard();
     window.pin.removePins();
-    fieldSets.forEach(function (value) {
+    fieldSetsElement.forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
     });
-    form.classList.add('notice__form--disabled');
+    formElement.classList.add('notice__form--disabled');
 
-    address.value = window.pin.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
+    addressElement.value = window.pin.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
     window.pin.setMainPinOnStart();
     window.resetOutputs();
     window.setFiltersDisabled(true);
@@ -36,12 +37,12 @@ window.forms = (function () {
   function enableForm() {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
-    if (window.userDialog.classList.contains('map--faded')) {
-      window.userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
-      fieldSets.forEach(function (value) {
+    if (userDialog.classList.contains('map--faded')) {
+      userDialog.classList.remove('map--faded'); // Сняли класс у активной карты.
+      fieldSetsElement.forEach(function (value) {
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
-      form.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
+      formElement.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
       window.forms.address.setAttribute('disabled', true); // Поле адреса всегда недоступно.
     }
 
@@ -54,39 +55,37 @@ window.forms = (function () {
     } else {
       window.notification.onSuccess(window.newData);
     }
-
-
   }
 
   // Зададим зависимость минимальной стоимости аренды от типа жилья.
-  form.type.addEventListener('change', function () {
-    var mySelect = form.type;
+  formElement.type.addEventListener('change', function () {
+    var mySelect = formElement.type;
     switch (mySelect.value) {
       case 'flat':
-        form.price.setAttribute('min', 1000);
+        formElement.price.setAttribute('min', 1000);
         break;
       case 'bungalo':
-        form.price.setAttribute('min', 0);
+        formElement.price.setAttribute('min', 0);
         break;
       case 'house':
-        form.price.setAttribute('min', 5000);
+        formElement.price.setAttribute('min', 5000);
         break;
       case 'palace':
-        form.price.setAttribute('min', 10000);
+        formElement.price.setAttribute('min', 10000);
         break;
     }
   });
 
   // Зависимость время заезда и выезда.
-  form.timein.addEventListener('change', function () {
-    form.timeout.selectedIndex = form.timein.selectedIndex;
+  formElement.timein.addEventListener('change', function () {
+    formElement.timeout.selectedIndex = formElement.timein.selectedIndex;
   });
-  form.timeout.addEventListener('change', function () {
-    form.timein.selectedIndex = form.timeout.selectedIndex;
+  formElement.timeout.addEventListener('change', function () {
+    formElement.timein.selectedIndex = formElement.timeout.selectedIndex;
   });
 
-  var rooms = form.rooms;
-  var capacity = form.capacity;
+  var rooms = formElement.rooms;
+  var capacity = formElement.capacity;
 
   // Задаёт синхронизацию поля количества комнать и поля колличества гостей.
   function onSetRoomWithCapacity(evt) {
@@ -123,23 +122,23 @@ window.forms = (function () {
   capacity.addEventListener('change', onSetRoomWithCapacity);
 
   // Обработчик кнопки "Сбросить"
-  btnReset.addEventListener('click', disableForm);
+  btnResetElement.addEventListener('click', disableForm);
 
   // Создаем обработчик отправки формы на сервер.
-  form.addEventListener('submit', function (evt) {
-    var formData = new FormData(form);
-    var ourAddress = address.value;
+  formElement.addEventListener('submit', function (evt) {
+    var formData = new FormData(formElement);
+    var ourAddress = addressElement.value;
 
     formData.append('address', ourAddress);
     window.backend.upload(formData, function () {
-      form.reset();
-      address.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
+      formElement.reset();
+      addressElement.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
     }, window.notification.onMessage);
     evt.preventDefault();
   });
 
   return {
-    address: address,
+    address: addressElement,
     enableForm: enableForm,
     disableForm: disableForm
   };

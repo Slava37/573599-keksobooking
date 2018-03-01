@@ -3,8 +3,7 @@
 window.notification = (function () {
 
   var TIME_OUT_MESSAGE = 5000;
-  window.userDialog = document.querySelector('.map');
-  var pins = window.userDialog.querySelector('.map__pins');
+  var pins = document.querySelector('.map').querySelector('.map__pins');
 
   var onMessage = function (message) {
     // Если сообщение сущетвует, то оно удаляется, и создается новое при новом запросе.

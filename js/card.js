@@ -5,6 +5,7 @@ window.card = (function () {
 
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var DIMENSIONS = 50;
   var mapCardTemplate = document.querySelector('template').content.querySelector('article.map__card');
 
   // Устанавливает значение жилья в зависимости от type DOM-элемента.
@@ -23,9 +24,9 @@ window.card = (function () {
 
   // Скрывает карточку.
   function hideCard() {
-    var currentCard = document.querySelector('article.map__card');
-    if (currentCard !== null) {
-      currentCard.style.display = 'none'; // Скрываем карточку.
+    var currentCardElement = document.querySelector('article.map__card');
+    if (currentCardElement !== null) {
+      currentCardElement.style.display = 'none'; // Скрываем карточку.
     }
   }
 
@@ -59,48 +60,37 @@ window.card = (function () {
     }
 
     var featureClass;
-    var featureLi;
+    var featureLiElement;
 
     for (var j = 0; j < features.length; j++) {
       featureClass = 'feature feature--' + features[j];
-      featureLi = document.createElement('li');
-      featureLi.className = featureClass;
-      personFeatures.appendChild(featureLi);
+      featureLiElement = document.createElement('li');
+      featureLiElement.className = featureClass;
+      personFeatures.appendChild(featureLiElement);
     }
 
     // Задаем описание обьявления.
-
     mapCardElement.getElementsByTagName('p')[4].textContent = house.offer.description;
 
     // Задаем картинки жилища.
     var photosList = mapCardElement.querySelector('.popup__pictures');
-
     var photosLiTemplate = photosList.querySelector('li');
+    var photosFragment = document.createDocumentFragment();
 
-    var photoFragment = document.createDocumentFragment();
-
-    var photoTemplateImg = photosLiTemplate.querySelector('img');
-    var photoElementImg;
-    for (i = 0; i < house.offer.photos.length; i++) {
-      if (i === 0) {
-        photoTemplateImg.src = house.offer.photos[i];
-        photoTemplateImg.width = '50';
-        photoTemplateImg.height = '50';
-        continue;
-      }
+    var photoImgElement;
+    house.offer.photos.forEach(function (value) {
       var photoElement = photosLiTemplate.cloneNode(true);
-      photoElementImg = photoElement.querySelector('img');
-      photoElementImg.src = house.offer.photos[i];
-      photoElementImg.width = '50';
-      photoElementImg.height = '50';
-
-      photoFragment.appendChild(photoElement);
-    }
-    photosList.appendChild(photoFragment);
+      photoImgElement = photoElement.querySelector('img');
+      photoImgElement.src = value;
+      photoImgElement.width = DIMENSIONS;
+      photoImgElement.height = DIMENSIONS;
+      photosFragment.appendChild(photoElement);
+    });
+    photosList.appendChild(photosFragment);
 
     // Меняем картинку аватара.
-    var avatar = mapCardElement.querySelector('.popup__avatar');
-    avatar.src = house.author.avatar;
+    var avatarElement = mapCardElement.querySelector('.popup__avatar');
+    avatarElement.src = house.author.avatar;
 
     return mapCardElement;
   }
@@ -116,11 +106,11 @@ window.card = (function () {
   }
 
   function closeButtonCard() {
-    var closeButton = document.querySelector('.popup__close');
+    var closeButtonElement = document.querySelector('.popup__close');
 
     document.addEventListener('keydown', onPopupEscPress);
-    closeButton.addEventListener('click', closePopup);
-    closeButton.addEventListener('keydown', function (evt) {
+    closeButtonElement.addEventListener('click', closePopup);
+    closeButtonElement.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ENTER_KEYCODE) {
         closePopup();
       }
