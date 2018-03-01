@@ -1,7 +1,7 @@
 
 'use strict';
 
-window.card = (function () {
+(function () {
 
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
@@ -20,7 +20,7 @@ window.card = (function () {
         return 'Дом';
       default: return '';
     }
-  }
+  };
 
   // Скрывает карточку.
   window.hideCard = function () {
@@ -28,7 +28,7 @@ window.card = (function () {
     if (currentCardElement !== null) {
       currentCardElement.style.display = 'none'; // Скрываем карточку.
     }
-  }
+  };
 
   // Возаращает новое обьявление, созданный на основе данных параметра (объекта).
   var createMapCard = function (house) {
@@ -83,19 +83,19 @@ window.card = (function () {
     avatarElement.src = house.author.avatar;
 
     return mapCardElement;
-  }
+  };
 
-  function onPopupEscPress(evt) {
+  var onPopupEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closePopup();
     }
-  }
-  function closePopup() {
+  };
+  var closePopup = function () {
     window.hideCard();
     document.removeEventListener('keydown', onPopupEscPress);
-  }
+  };
 
-  function closeButtonCard() {
+  var closeButtonCard = function () {
     var closeButtonElement = document.querySelector('.popup__close');
 
     document.addEventListener('keydown', onPopupEscPress);
@@ -105,7 +105,7 @@ window.card = (function () {
         closePopup();
       }
     });
-  }
+  };
   window.showCard = function (house) {
     var mapFilterContainer = document.querySelector('.map__filters-container');
     var fragmentCard = document.createDocumentFragment();

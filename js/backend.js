@@ -1,6 +1,6 @@
 'use strict';
 
-window.backend = (function () {
+(function () {
 
   var TIME_OUT_SERVER = 10000;
   var SUCCESS_STATUS = 200;
@@ -8,7 +8,7 @@ window.backend = (function () {
   window.mapElement = document.querySelector('.map');
 
   // Реализация запроса к серверу в зависимости от типа запроса.
-  function makeRequest(type, url, data, onLoad, onError) {
+  var makeRequest = function (type, url, data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -39,19 +39,14 @@ window.backend = (function () {
     } else if (type === 'GET') {
       xhr.send();
     }
-  }
+  };
   // Функция загрузки данных формы на сервер Академии.
-  function upload(data, onLoad, onError) {
+  window.upload = function (data, onLoad, onError) {
     makeRequest('POST', 'https://js.dump.academy/keksobooking', data, onLoad, onError);
-  }
+  };
 
   // Функция загрузки данных с сервера Академии.
-  function load(onError) {
+  window.load = function (onError) {
     makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, null, onError);
-  }
-
-  return {
-    upload: upload,
-    load: load
   };
 })();

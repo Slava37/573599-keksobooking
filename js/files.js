@@ -1,6 +1,6 @@
 'use strict';
 
-window.files = (function () {
+(function () {
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
@@ -25,7 +25,7 @@ window.files = (function () {
   };
 
   // Создадим логику загрузки файла загрузку файла для аватарки пользователя и фото жилья .
-  function getOutput(evt) {
+  var getOutput = function (evt) {
     var files;
     if (evt.type === 'change' && evt.target === chooserAvatarElement) {
       files = chooserAvatarElement.files;
@@ -51,7 +51,7 @@ window.files = (function () {
   }
 
   // Обработчик на действия а аватаркой.
-  function onChooserFileAvatar(evt) {
+  var onChooserFileAvatar = function (evt) {
     evt.stopPropagation();
     evt.preventDefault();
     var output = getOutput(evt);
@@ -62,7 +62,7 @@ window.files = (function () {
     reader.readAsDataURL(output[0]);
   }
   // Обработчик на действия с фотографиями.
-  function onChooserFilePhotos(evt) {
+  var onChooserFilePhotos = function (evt) {
     evt.stopPropagation();
     evt.preventDefault();
     var output = getOutput(evt);
@@ -89,7 +89,7 @@ window.files = (function () {
   }
 
   // При отпускании мыши и завершении перетаскивания мы копируем перетаскиваемые файлы.
-  function onDragOver(evt) {
+  var onDragOver = function (evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy';

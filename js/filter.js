@@ -1,6 +1,6 @@
 'use strict';
 
-window.filter = (function () {
+(function () {
   // Объявим необходимые для фильтрации переменные.
   var type = 'any';
   var price = 'any';
@@ -39,13 +39,13 @@ window.filter = (function () {
       fieldset.removeAttribute('disabled');
     }
   };
-  function onFilter() {
+  var onFilter = function () {
     window.hideCard();
-    window.pin.removePins();
+    window.removePins();
     if (typeof onFilterChangeExternal === 'function') {
       window.callDebounce(onFilterChangeExternal);
     }
-  }
+  };
   // ...и добавим им обработчик, используя делегирование.
   mapFilters.addEventListener('change', function (evt) {
     var target = evt.target;
@@ -96,7 +96,7 @@ window.filter = (function () {
   });
 
   // Функция, возращающая результат фильтрации.
-  function filterPins(houses) {
+  window.filterPins = function (houses) {
     return houses.filter(function (house) {
       var boolPrice;
       switch (price) {
@@ -125,12 +125,9 @@ window.filter = (function () {
 
       return boolPrice && boolType && boolRooms && boolGuests && boolWifi && boolDishwasher && boolParking && boolWasher && boolElevator && boolConditioner;
     });
-  }
+  };
 
-  return {
-    apply: filterPins,
-    setCallback: function (fn) {
-      onFilterChangeExternal = fn;
-    }
+  window.setFilterCallback = function (fn) {
+    onFilterChangeExternal = fn;
   };
 })();
