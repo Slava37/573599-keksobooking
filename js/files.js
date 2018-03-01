@@ -4,21 +4,21 @@ window.files = (function () {
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var fileChooserAvatar = document.getElementById('avatar');
-  var noticePhoto = document.querySelector('.notice__photo');
-  var avatarUpload = noticePhoto.querySelector('.drop-zone');
+  var chooserAvatarElement = document.getElementById('avatar');
+  var noticePhotoElement = document.querySelector('.notice__photo');
+  var avatarUploadElement = noticePhotoElement.querySelector('.drop-zone');
 
-  var fileChooserPhotos = document.getElementById('images');
-  var photoContainer = document.querySelector('.form__photo-container');
-  var photosUpload = photoContainer.querySelector('.drop-zone');
-  var uploadBlock = photoContainer.querySelector('.upload');
+  var chooserPhotosElement = document.getElementById('images');
+  var photoContainerElement = document.querySelector('.form__photo-container');
+  var photosUploadElement = photoContainerElement.querySelector('.drop-zone');
+  var uploadBlockElement = photoContainerElement.querySelector('.upload');
 
-  var preview = noticePhoto.querySelector('img');
+  var previewElement = noticePhotoElement.querySelector('img');
 
   // Удаляет загруженные фото и выставляет дефолтное значение аватара.
   window.resetOutputs = function () {
-    preview.src = 'img/muffin.png';
-    var photos = photoContainer.querySelectorAll('.form__photo');
+    previewElement.src = 'img/muffin.png';
+    var photos = photoContainerElement.querySelectorAll('.form__photo');
     photos.forEach(function (value) {
       value.parentNode.removeChild(value);
     });
@@ -26,28 +26,28 @@ window.files = (function () {
 
   // Создадим логику загрузки файла загрузку файла для аватарки пользователя и фото жилья .
   function getOutput(evt) {
-    var file;
-    if (evt.type === 'change' && evt.target === fileChooserAvatar) {
-      file = fileChooserAvatar.files;
+    var files;
+    if (evt.type === 'change' && evt.target === chooserAvatarElement) {
+      files = chooserAvatarElement.files;
     }
-    if (evt.type === 'change' && evt.target === fileChooserPhotos) {
-      file = fileChooserPhotos.files;
+    if (evt.type === 'change' && evt.target === chooserPhotosElement) {
+      files = chooserPhotosElement.files;
     }
     if (evt.type === 'drop') {
-      file = evt.dataTransfer.files;
+      files = evt.dataTransfer.files;
     }
-    var files = [];
+    var pictureFiles = [];
     var matches;
-    for (var i = 0; i < file.length; i++) {
-      var fileName = file[i].name.toLowerCase();
+    for (var i = 0; i < files.length; i++) {
+      var fileName = files[i].name.toLowerCase();
       matches = FILE_TYPES.some(function (value) {
         return fileName.endsWith(value);
       });
       if (matches) {
-        files.push(file[i]);
+        pictureFiles.push(files[i]);
       }
     }
-    return files;
+    return pictureFiles;
   }
 
   // Обработчик на действия а аватаркой.
@@ -57,7 +57,7 @@ window.files = (function () {
     var output = getOutput(evt);
     var reader = new FileReader();
     reader.addEventListener('load', function () {
-      preview.src = reader.result;
+      previewElement.src = reader.result;
     });
     reader.readAsDataURL(output[0]);
   }
@@ -83,7 +83,7 @@ window.files = (function () {
           img.draggable = true;
           img.zIndex = '100';
           div.appendChild(img);
-          photoContainer.insertBefore(div, uploadBlock);
+          photoContainerElement.insertBefore(div, uploadBlockElement);
         };
       })(reader));
       reader.readAsDataURL(output[i]);
@@ -98,11 +98,11 @@ window.files = (function () {
     evt.dataTransfer.dropEffect = 'copy';
   }
 
-  fileChooserAvatar.addEventListener('change', onChooserFileAvatar);
-  avatarUpload.addEventListener('dragover', onDragOver, false);
-  avatarUpload.addEventListener('drop', onChooserFileAvatar, false);
+  chooserAvatarElement.addEventListener('change', onChooserFileAvatar);
+  avatarUploadElement.addEventListener('dragover', onDragOver, false);
+  avatarUploadElement.addEventListener('drop', onChooserFileAvatar, false);
 
-  fileChooserPhotos.addEventListener('change', onChooserFilePhotos);
-  photosUpload.addEventListener('dragover', onDragOver, false);
-  photosUpload.addEventListener('drop', onChooserFilePhotos, false);
+  chooserPhotosElement.addEventListener('change', onChooserFilePhotos);
+  photosUploadElement.addEventListener('dragover', onDragOver, false);
+  photosUploadElement.addEventListener('drop', onChooserFilePhotos, false);
 })();

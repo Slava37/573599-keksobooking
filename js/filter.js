@@ -41,7 +41,7 @@ window.filter = (function () {
     window.card.hideCard();
     window.pin.removePins();
     if (typeof onFilterChangeExternal === 'function') {
-      window.debounce.setValue(onFilterChangeExternal);
+      window.callDebounce(onFilterChangeExternal);
     }
   }
   // ...и добавим им обработчик, используя делегирование.

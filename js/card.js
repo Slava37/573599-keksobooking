@@ -48,26 +48,16 @@ window.card = (function () {
     mapCardElement.dataset.price = house.offer.title;
     mapCardElement.getElementsByTagName('p')[2].textContent = house.offer.rooms + ' комнаты для ' + house.offer.guests + ' гостей';
     mapCardElement.getElementsByTagName('p')[3].textContent = 'Заезд после ' + house.offer.checkin + ', выезд до ' + house.offer.checkout;
-    var features = house.offer.features;
 
-    // Очистим список и добавим свои элементы.
+    // Добавим свои элементы.
+    var pupupFeaturesElement = mapCardElement.querySelector('.popup__features');
 
-    var personFeatures = mapCardElement.querySelector('.popup__features');
-    var featuresLiElements = personFeatures.getElementsByTagName('li');
-
-    for (var i = 0; i < window.data.featuresLength; i++) {
-      featuresLiElements[0].parentNode.removeChild(featuresLiElements[0]);
-    }
-
-    var featureClass;
-    var featureLiElement;
-
-    for (var j = 0; j < features.length; j++) {
-      featureClass = 'feature feature--' + features[j];
-      featureLiElement = document.createElement('li');
+    house.offer.features.forEach(function (value) {
+      var featureClass = 'feature feature--' + value;
+      var featureLiElement = document.createElement('li');
       featureLiElement.className = featureClass;
-      personFeatures.appendChild(featureLiElement);
-    }
+      pupupFeaturesElement.appendChild(featureLiElement);
+    });
 
     // Задаем описание обьявления.
     mapCardElement.getElementsByTagName('p')[4].textContent = house.offer.description;
@@ -115,6 +105,17 @@ window.card = (function () {
         closePopup();
       }
     });
+  }
+  window.showCard = function (house) {
+    var mapFilterContainer = document.querySelector('.map__filters-container');
+    var fragmentCard = document.createDocumentFragment();
+    fragmentCard.appendChild(window.card.createMapCard(house));
+    var popup = document.getElementById('new_card');
+    if (popup !== null) {
+      popup.parentNode.removeChild(popup);
+    }
+    document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
+    window.card.closeButtonCard();
   }
   return {
     createMapCard: createMapCard,

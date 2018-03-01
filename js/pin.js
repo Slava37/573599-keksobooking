@@ -15,7 +15,6 @@ window.pin = (function () {
   var mainPin = document.querySelector('.map').querySelector('.map__pin--main');
   var pinImage = mainPin.querySelector('.main__pin--image');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
-  var mapFilterContainer = document.querySelector('.map__filters-container');
 
   var position = getStartPositionPinAddress();
 
@@ -103,14 +102,7 @@ window.pin = (function () {
 
     // Добавляем обработчик и создание карточки для дома.
     pinElement.addEventListener('click', function () {
-      var fragmentCard = document.createDocumentFragment();
-      fragmentCard.appendChild(window.card.createMapCard(house));
-      var popup = document.getElementById('new_card');
-      if (popup !== null) {
-        popup.parentNode.removeChild(popup);
-      }
-      document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
-      window.card.closeButtonCard();
+      window.showCard(house);
     });
     return pinElement;
   }
