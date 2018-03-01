@@ -1,6 +1,6 @@
 'use strict';
 
-window.forms = (function () {
+(function () {
 
   var formElement = document.querySelector('.notice__form');
   var addressElement = document.getElementById('address');
@@ -9,11 +9,9 @@ window.forms = (function () {
 
   // Заполнение поля адреса координатами стартовой позиции метки.
   addressElement.value = window.pin.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
-  addressElement.setAttribute('disabled', true);
 
   // Доступная и недоступная форма.
   function disableForm() {
-
     var currentCardElement = document.querySelector('article.map__card');
     document.querySelector('.map').classList.add('map--faded');
     formElement.reset(); // Сбрасываем поля до стартовых значений.
@@ -32,7 +30,7 @@ window.forms = (function () {
     window.setFiltersDisabled(true);
   }
 
-  function enableForm() {
+  window.enableForm = function () {
 
     // Условие, при котором ряд действий выполняется только, если карта скрыта.
     if (window.mapElement.classList.contains('map--faded')) {
@@ -45,7 +43,7 @@ window.forms = (function () {
     }
 
     // Устанавливаем координаты адреса, на конце метки.
-    addressElement.value = (window.pin.mainPin.offsetLeft + window.pin.getWidthPin() / 2) + ', ' + (window.pin.mainPin.offsetTop + window.pin.getHeightTipOfPin() + window.pin.getHeightPin() / 2);
+
     window.pin.removePins();
     // Создаем новый массив домов и заполняем его данными с сервера.
     if (!window.newData) {
@@ -135,8 +133,4 @@ window.forms = (function () {
       addressElement.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
     }, window.showError);
   });
-
-  return {
-    enableForm: enableForm
-  };
 })();
