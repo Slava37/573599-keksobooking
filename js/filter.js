@@ -90,7 +90,6 @@ window.filter = (function () {
           onFilter();
           break;
       }
-      target = target.parentNode;
     }
   });
 
@@ -112,15 +111,15 @@ window.filter = (function () {
           boolPrice = house.offer.price >= 50000;
           break;
       }
-      var boolType = type === 'any' ? true : house.offer.type === type;
-      var boolRooms = rooms === 'any' ? true : house.offer.rooms === Number(rooms);
-      var boolGuests = guests === 'any' ? true : house.offer.guests === Number(guests);
-      var boolWifi = wifi === false ? true : house.offer.features.join(' ').includes('wifi');
-      var boolDishwasher = dishwasher === false ? true : house.offer.features.join(' ').includes('dishwasher');
-      var boolParking = parking === false ? true : house.offer.features.join(' ').includes('parking');
-      var boolWasher = washer === false ? true : house.offer.features.join(' ').includes('washer');
-      var boolElevator = elevator === false ? true : house.offer.features.join(' ').includes('elevator');
-      var boolConditioner = conditioner === false ? true : house.offer.features.join(' ').includes('conditioner');
+      var boolType = type === 'any' || house.offer.type === type;
+      var boolRooms = rooms === 'any' || house.offer.rooms === Number(rooms);
+      var boolGuests = guests === 'any' || house.offer.guests === Number(guests);
+      var boolWifi = wifi === false || house.offer.features.join(' ').includes('wifi');
+      var boolDishwasher = dishwasher === false || house.offer.features.join(' ').includes('dishwasher');
+      var boolParking = parking === false || house.offer.features.join(' ').includes('parking');
+      var boolWasher = washer === false || house.offer.features.join(' ').includes('washer');
+      var boolElevator = elevator === false || house.offer.features.join(' ').includes('elevator');
+      var boolConditioner = conditioner === false || house.offer.features.join(' ').includes('conditioner');
 
       return boolPrice && boolType && boolRooms && boolGuests && boolWifi && boolDishwasher && boolParking && boolWasher && boolElevator && boolConditioner;
     });

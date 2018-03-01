@@ -38,15 +38,15 @@ window.files = (function () {
     }
     var pictureFiles = [];
     var matches;
-    for (var i = 0; i < files.length; i++) {
-      var fileName = files[i].name.toLowerCase();
+    [].filter.call(files, function (val) {
+      var fileName = val.name.toLowerCase();
       matches = FILE_TYPES.some(function (value) {
         return fileName.endsWith(value);
       });
       if (matches) {
-        pictureFiles.push(files[i]);
+        pictureFiles.push(val);
       }
-    }
+    });
     return pictureFiles;
   }
 
@@ -67,30 +67,27 @@ window.files = (function () {
     evt.preventDefault();
     var output = getOutput(evt);
 
-    for (var i = 0; i < output.length; i++) {
-
+    output.forEach(function (file) {
       var reader = new FileReader();
-      reader.addEventListener('load', (function (file) {
+      reader.addEventListener('load', (function (fileSrc) {
         return function () {
           // Добавление блока с классом .form__photo
-          var div = document.createElement('div');
-          div.classList.add('form__photo');
-          div.style = 'margin-right: 2px; display: inline-block;';
+          var divElement = document.createElement('div');
+          divElement.classList.add('form__photo');
+          divElement.style = 'margin-right: 2px; display: inline-block;';
 
-          var img = document.createElement('img');
-          img.src = file.result;
-          img.width = '66';
-          img.draggable = true;
-          img.zIndex = '100';
-          div.appendChild(img);
-          photoContainerElement.insertBefore(div, uploadBlockElement);
+          var imgElement = document.createElement('img');
+          imgElement.src = fileSrc.result;
+          imgElement.width = '66';
+          imgElement.zIndex = '100';
+          divElement.appendChild(imgElement);
+          photoContainerElement.insertBefore(divElement, uploadBlockElement);
         };
       })(reader));
-      reader.readAsDataURL(output[i]);
-    }
-
-
+      reader.readAsDataURL(file);
+    });
   }
+
   // При отпускании мыши и завершении перетаскивания мы копируем перетаскиваемые файлы.
   function onDragOver(evt) {
     evt.stopPropagation();
