@@ -2,7 +2,6 @@
 'use strict';
 
 (function () {
-
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
   var DIMENSIONS = 50;
@@ -33,6 +32,7 @@
   // Возаращает новое обьявление, созданный на основе данных параметра (объекта).
   var createMapCard = function (house) {
     var mapCardElement = mapCardTemplate.cloneNode(true);
+    var descriptionsElement = mapCardElement.querySelectorAll('p');
     mapCardElement.id = 'new_card';
 
     mapCardElement.querySelector('h4').textContent = getOfferType(house.offer.type);
@@ -46,8 +46,8 @@
     mapCardElement.querySelector('.popup__price').textContent = house.offer.price + '\u20BD/ночь';
 
     mapCardElement.dataset.price = house.offer.title;
-    mapCardElement.getElementsByTagName('p')[2].textContent = house.offer.rooms + ' комнаты для ' + house.offer.guests + ' гостей';
-    mapCardElement.getElementsByTagName('p')[3].textContent = 'Заезд после ' + house.offer.checkin + ', выезд до ' + house.offer.checkout;
+    descriptionsElement[2].textContent = house.offer.rooms + ' комнаты для ' + house.offer.guests + ' гостей';
+    descriptionsElement[3].textContent = 'Заезд после ' + house.offer.checkin + ', выезд до ' + house.offer.checkout;
 
     // Добавим свои элементы.
     var pupupFeaturesElement = mapCardElement.querySelector('.popup__features');
@@ -60,7 +60,7 @@
     });
 
     // Задаем описание обьявления.
-    mapCardElement.getElementsByTagName('p')[4].textContent = house.offer.description;
+    mapCardElement.querySelectorAll('p')[4].textContent = house.offer.description;
 
     // Задаем картинки жилища.
     var photosList = mapCardElement.querySelector('.popup__pictures');
@@ -110,7 +110,7 @@
     var mapFilterContainer = document.querySelector('.map__filters-container');
     var fragmentCard = document.createDocumentFragment();
     fragmentCard.appendChild(createMapCard(house));
-    var popup = document.getElementById('new_card');
+    var popup = document.querySelector('#new_card');
     if (popup !== null) {
       popup.parentNode.removeChild(popup);
     }

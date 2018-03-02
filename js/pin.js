@@ -12,8 +12,7 @@
   var MAX_HOUSES = 5;
 
   var mainPinElement = window.mapElement.querySelector('.map__pin--main');
-  var addressElement = document.getElementById('address');
-  var pinImageElement = mainPinElement.querySelector('.main__pin--image');
+  var addressElement = document.querySelector('#address');
   var pinsElement = window.mapElement.querySelector('.map__pins');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
@@ -21,7 +20,7 @@
     return START_POSITION_X + ', ' + START_POSITION_Y;
   };
   // Реализация передвижения метки.
-  pinImageElement.addEventListener('mousedown', function (evt) {
+  mainPinElement.addEventListener('mousedown', function (evt) {
     var position = getStartPositionAddress();
     evt.preventDefault();
 

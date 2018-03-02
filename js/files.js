@@ -4,11 +4,11 @@
 
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var chooserAvatarElement = document.getElementById('avatar');
+  var chooserAvatarElement = document.querySelector('#avatar');
   var noticePhotoElement = document.querySelector('.notice__photo');
   var avatarUploadElement = noticePhotoElement.querySelector('.drop-zone');
 
-  var chooserPhotosElement = document.getElementById('images');
+  var chooserPhotosElement = document.querySelector('#images');
   var photoContainerElement = document.querySelector('.form__photo-container');
   var photosUploadElement = photoContainerElement.querySelector('.drop-zone');
   var uploadBlockElement = photoContainerElement.querySelector('.upload');
@@ -27,10 +27,10 @@
   // Создадим логику загрузки файла загрузку файла для аватарки пользователя и фото жилья .
   var getOutput = function (evt) {
     var files;
-    if (evt.type === 'change' && evt.target === chooserAvatarElement) {
+    if (evt.target === chooserAvatarElement) {
       files = chooserAvatarElement.files;
     }
-    if (evt.type === 'change' && evt.target === chooserPhotosElement) {
+    if (evt.target === chooserPhotosElement) {
       files = chooserPhotosElement.files;
     }
     if (evt.type === 'drop') {

@@ -1,18 +1,8 @@
 'use strict';
 
 (function () {
-  // Объявим необходимые для фильтрации переменные.
-  var type = 'any';
-  var price = 'any';
-  var rooms = 'any';
-  var guests = 'any';
-
-  var wifi = false;
-  var dishwasher = false;
-  var parking = false;
-  var washer = false;
-  var elevator = false;
-  var conditioner = false;
+  var LOWER_COST_ROOM = 10000;
+  var HIGHTER_COST_ROOM = 50000;
 
   // Коллбек для функции отрисовки пинов.
   var onFilterChangeExternal = null;
@@ -46,84 +36,67 @@
       window.callDebounce(onFilterChangeExternal);
     }
   };
+
+  var properties = {
+    'housing-type': 'any',
+    'housing-price': 'any',
+    'housing-rooms': 'any',
+    'housing-guests': 'any',
+    'filter-wifi': false,
+    'filter-dishwasher': false,
+    'filter-parking': false,
+    'filter-washer': false,
+    'filter-elevator': false,
+    'filter-conditioner': false
+  };
   // ...и добавим им обработчик, используя делегирование.
   mapFilters.addEventListener('change', function (evt) {
     var target = evt.target;
     if (target !== mapFilters) {
-      switch (target.id) {
-        case 'housing-type':
-          type = target.value;
-          onFilter();
-          break;
-        case 'housing-price':
-          price = target.value;
-          onFilter();
-          break;
-        case 'housing-rooms':
-          rooms = target.value;
-          onFilter();
-          break;
-        case 'housing-guests':
-          guests = target.value;
-          onFilter();
-          break;
-        case 'filter-wifi':
-          wifi = target.checked;
-          onFilter();
-          break;
-        case 'filter-dishwasher':
-          dishwasher = target.checked;
-          onFilter();
-          break;
-        case 'filter-parking':
-          parking = target.checked;
-          onFilter();
-          break;
-        case 'filter-washer':
-          washer = target.checked;
-          onFilter();
-          break;
-        case 'filter-elevator':
-          elevator = target.checked;
-          onFilter();
-          break;
-        case 'filter-conditioner':
-          conditioner = target.checked;
-          onFilter();
-          break;
+      if (typeof target.checked === 'boolean') {
+        properties[target.id] = target.checked;
+      } else {
+        properties[target.id] = target.value;
       }
+      onFilter();
     }
   });
-
   // Функция, возращающая результат фильтрации.
   var getPins = function (houses) {
-    return houses.filter(function (house) {
-      var boolPrice;
-      switch (price) {
-        case 'any':
-          boolPrice = true;
-          break;
-        case 'low':
-          boolPrice = house.offer.price < 10000;
-          break;
-        case 'middle':
-          boolPrice = house.offer.price >= 10000 && house.offer.price < 50000;
-          break;
-        case 'high':
-          boolPrice = house.offer.price >= 50000;
-          break;
-      }
-      var boolType = type === 'any' || house.offer.type === type;
-      var boolRooms = rooms === 'any' || house.offer.rooms === Number(rooms);
-      var boolGuests = guests === 'any' || house.offer.guests === Number(guests);
-      var boolWifi = wifi === false || house.offer.features.join(' ').includes('wifi');
-      var boolDishwasher = dishwasher === false || house.offer.features.join(' ').includes('dishwasher');
-      var boolParking = parking === false || house.offer.features.join(' ').includes('parking');
-      var boolWasher = washer === false || house.offer.features.join(' ').includes('washer');
-      var boolElevator = elevator === false || house.offer.features.join(' ').includes('elevator');
-      var boolConditioner = conditioner === false || house.offer.features.join(' ').includes('conditioner');
 
-      return boolPrice && boolType && boolRooms && boolGuests && boolWifi && boolDishwasher && boolParking && boolWasher && boolElevator && boolConditioner;
+    var priceProperty = function (currentPrice, house) {
+      var prices = {
+        'any': true,
+        'low': house.offer.price < LOWER_COST_ROOM,
+        'middle': house.offer.price >= LOWER_COST_ROOM && house.offer.price < HIGHTER_COST_ROOM,
+        'high': house.offer.price >= HIGHTER_COST_ROOM
+      };
+      return prices[currentPrice];
+    };
+
+    var filterProperties = function (property, value, house) {
+      if (property === properties['housing-type']) {
+        return properties['housing-type'] === 'any' || house.offer.type === properties['housing-type'];
+      } else if (property === properties['housing-rooms']) {
+        return properties['housing-rooms'] === 'any' || house.offer.rooms === Number(properties['housing-rooms']);
+      } else if (property === properties['housing-guests']) {
+        return properties['housing-guests'] === 'any' || house.offer.rooms === Number(properties['housing-guests']);
+      } else {
+        return property === false || house.offer.features.join(' ').includes(value);
+      }
+    };
+
+    return houses.filter(function (house) {
+      return priceProperty(properties['housing-price'], house)
+        && filterProperties(properties['housing-type'], null, house)
+        && filterProperties(properties['housing-rooms'], null, house)
+        && filterProperties(properties['housing-guests'], null, house)
+        && filterProperties(properties['filter-wifi'], 'wifi', house)
+        && filterProperties(properties['filter-dishwasher'], 'dishwasher', house)
+        && filterProperties(properties['filter-parking'], 'parking', house)
+        && filterProperties(properties['filter-washer'], 'washer', house)
+        && filterProperties(properties['filter-elevator'], 'elevator', house)
+        && filterProperties(properties['filter-conditioner'], 'conditioner', house);
     });
   };
 

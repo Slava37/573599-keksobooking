@@ -1,9 +1,13 @@
 'use strict';
 
 (function () {
+  var MIN_COST_BUNGALO = 0;
+  var MIN_COST_FLAT = 1000;
+  var MIN_COST_HOUSE = 5000;
+  var MIN_COST_PALACE = 10000;
 
   var formElement = document.querySelector('.notice__form');
-  var addressElement = document.getElementById('address');
+  var addressElement = document.querySelector('#address');
   var fieldSetsElement = formElement.querySelectorAll('fieldset');
   var btnResetElement = formElement.querySelector('.form__reset');
 
@@ -37,7 +41,6 @@
         value.removeAttribute('disabled'); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
       });
       formElement.classList.remove('notice__form--disabled'); // Сняли disabled у всей формы объявления.
-      addressElement.setAttribute('disabled', true); // Поле адреса всегда недоступно.
     }
 
     // Устанавливаем координаты адреса, на конце метки.
@@ -59,16 +62,20 @@
     var mySelect = formElement.type;
     switch (mySelect.value) {
       case 'flat':
-        formElement.price.setAttribute('min', 1000);
+        formElement.price.placeholder = 'От ' + MIN_COST_FLAT;
+        formElement.price.setAttribute('min', MIN_COST_FLAT);
         break;
       case 'bungalo':
-        formElement.price.setAttribute('min', 0);
+        formElement.price.placeholder = 'Любая';
+        formElement.price.setAttribute('min', MIN_COST_BUNGALO);
         break;
       case 'house':
-        formElement.price.setAttribute('min', 5000);
+        formElement.price.placeholder = 'От ' + MIN_COST_HOUSE;
+        formElement.price.setAttribute('min', MIN_COST_HOUSE);
         break;
       case 'palace':
-        formElement.price.setAttribute('min', 10000);
+        formElement.price.placeholder = 'От ' + MIN_COST_PALACE;
+        formElement.price.setAttribute('min', MIN_COST_PALACE);
         break;
     }
   });
@@ -93,6 +100,7 @@
     if (evt.target === roomsElement) {
       capacityCount = capacityElement.value;
       room = evt.target.value;
+
     } else if (evt.target === capacityElement) {
       capacityCount = evt.target.value;
       room = roomsElement.value;
@@ -110,6 +118,36 @@
     }
   };
 
+  var onDisabledCapasity = function (evt) {
+    var room = evt.target.value;
+    switch (room) {
+      case '1':
+        capacityElement.options[0].setAttribute('disabled', true);
+        capacityElement.options[1].setAttribute('disabled', true);
+        capacityElement.options[2].removeAttribute('disabled');
+        capacityElement.options[3].setAttribute('disabled', true);
+        break;
+      case '2':
+        capacityElement.options[0].setAttribute('disabled', true);
+        capacityElement.options[1].removeAttribute('disabled');
+        capacityElement.options[2].removeAttribute('disabled');
+        capacityElement.options[3].setAttribute('disabled', true);
+        break;
+      case '3':
+        capacityElement.options[0].removeAttribute('disabled');
+        capacityElement.options[1].removeAttribute('disabled');
+        capacityElement.options[2].removeAttribute('disabled');
+        capacityElement.options[3].setAttribute('disabled', true);
+        break;
+      case '100':
+        capacityElement.options[0].setAttribute('disabled', true);
+        capacityElement.options[1].setAttribute('disabled', true);
+        capacityElement.options[2].setAttribute('disabled', true);
+        capacityElement.options[3].removeAttribute('disabled');
+    }
+  };
+  roomsElement.addEventListener('change', onDisabledCapasity);
+
   roomsElement.addEventListener('change', onSetRoomWithCapacity);
   capacityElement.addEventListener('change', onSetRoomWithCapacity);
 
@@ -124,9 +162,9 @@
 
     formData.append('address', ourAddress);
     window.backend.upload(formData, function (message) {
-      formElement.reset();
+      disableForm();
       window.notification.showInfo(message);
-      addressElement.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
+      addressElement.value = window.pin.getStartPositionAddress(); // Поле адреса сбрасываться не должно при отправке формы.
     }, window.notification.showError);
   });
 })();
