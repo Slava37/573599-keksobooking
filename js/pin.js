@@ -72,7 +72,8 @@
 
   // Удаляет метки.
   var removeAll = function () {
-    pinsElement.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (pinElement) {
+    var allPinsExceptMain = pinsElement.querySelectorAll('.map__pin:not(.map__pin--main)');
+    allPinsExceptMain.forEach(function (pinElement) {
       pinsElement.removeChild(pinElement);
     });
   };
