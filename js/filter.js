@@ -21,7 +21,7 @@
   var mapFilters = document.querySelector('.map__filters');
 
   // Фильтры должны быть доступны только после загрузке данных с сервера и отрисовки пинов.
-  window.setFiltersDisabled = function (bool) {
+  var setDisabled = function (bool) {
 
     var selects = mapFilters.querySelectorAll('select');
     var fieldset = mapFilters.querySelector('fieldset');
@@ -40,8 +40,8 @@
     }
   };
   var onFilter = function () {
-    window.hideCard();
-    window.removePins();
+    window.card.hide();
+    window.pin.removeAll();
     if (typeof onFilterChangeExternal === 'function') {
       window.callDebounce(onFilterChangeExternal);
     }
@@ -96,7 +96,7 @@
   });
 
   // Функция, возращающая результат фильтрации.
-  window.filterPins = function (houses) {
+  var getPins = function (houses) {
     return houses.filter(function (house) {
       var boolPrice;
       switch (price) {
@@ -127,7 +127,12 @@
     });
   };
 
-  window.setFilterCallback = function (fn) {
-    onFilterChangeExternal = fn;
+  window.filter = {
+    setCallback: function (fn) {
+      onFilterChangeExternal = fn;
+    },
+    getPins: getPins,
+    setDisabled: setDisabled
   };
+
 })();

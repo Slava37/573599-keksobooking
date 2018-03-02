@@ -23,7 +23,7 @@
   };
 
   // Скрывает карточку.
-  window.hideCard = function () {
+  var hide = function () {
     var currentCardElement = document.querySelector('article.map__card');
     if (currentCardElement !== null) {
       currentCardElement.style.display = 'none'; // Скрываем карточку.
@@ -91,7 +91,7 @@
     }
   };
   var closePopup = function () {
-    window.hideCard();
+    hide();
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
@@ -106,7 +106,7 @@
       }
     });
   };
-  window.showCard = function (house) {
+  var show = function (house) {
     var mapFilterContainer = document.querySelector('.map__filters-container');
     var fragmentCard = document.createDocumentFragment();
     fragmentCard.appendChild(createMapCard(house));
@@ -116,5 +116,9 @@
     }
     document.querySelector('.map').insertBefore(fragmentCard, mapFilterContainer);
     closeButtonCard();
+  };
+  window.card = {
+    hide: hide,
+    show: show
   };
 })();

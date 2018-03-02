@@ -28,11 +28,15 @@
     }, TIME_OUT_MESSAGE);
   };
 
-  window.showInfo = function (message) {
+  var showInfo = function (message) {
     setMessageProperty(message, 'green', '40px');
   };
 
-  window.showError = function (message) {
+  var showError = function (message) {
     setMessageProperty(message, 'red', '130px');
+  };
+  window.notification = {
+    showInfo: showInfo,
+    showError: showError
   };
 })();

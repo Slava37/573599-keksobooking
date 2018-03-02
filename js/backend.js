@@ -18,7 +18,7 @@
             onLoad('Успешно!');
           } else {
             window.newData = xhr.response;
-            window.renderPins();
+            window.pin.renderAll();
           }
           break;
         default:
@@ -41,12 +41,16 @@
     }
   };
   // Функция загрузки данных формы на сервер Академии.
-  window.upload = function (data, onLoad, onError) {
+  var upload = function (data, onLoad, onError) {
     makeRequest('POST', 'https://js.dump.academy/keksobooking', data, onLoad, onError);
   };
 
   // Функция загрузки данных с сервера Академии.
-  window.load = function (onError) {
+  var load = function (onError) {
     makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, null, onError);
+  };
+  window.backend = {
+    load: load,
+    upload: upload
   };
 })();

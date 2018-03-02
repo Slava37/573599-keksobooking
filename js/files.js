@@ -36,18 +36,10 @@
     if (evt.type === 'drop') {
       files = evt.dataTransfer.files;
     }
-    var pictureFiles = [];
-    var matches;
-    [].filter.call(files, function (val) {
-      var fileName = val.name.toLowerCase();
-      matches = FILE_TYPES.some(function (value) {
-        return fileName.endsWith(value);
-      });
-      if (matches) {
-        pictureFiles.push(val);
-      }
+    var picturesFiles = Array.prototype.filter.call(files, function (file) {
+      return FILE_TYPES.indexOf(file.name.split('.').pop().toLowerCase()) !== -1;
     });
-    return pictureFiles;
+    return picturesFiles;
   };
 
   // Обработчик на действия а аватаркой.

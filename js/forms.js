@@ -8,26 +8,24 @@
   var btnResetElement = formElement.querySelector('.form__reset');
 
   // Заполнение поля адреса координатами стартовой позиции метки.
-  addressElement.value = window.getStartPositionPinAddress(); // Устанавливаем старовое положение метки в поле адреса.
+  addressElement.value = window.pin.getStartPositionAddress(); // Устанавливаем старовое положение метки в поле адреса.
 
   // Доступная и недоступная форма.
   var disableForm = function () {
-    var currentCardElement = document.querySelector('article.map__card');
-    document.querySelector('.map').classList.add('map--faded');
+    window.mapElement.classList.add('map--faded');
+
     formElement.reset(); // Сбрасываем поля до стартовых значений.
-    if (currentCardElement !== null) {
-      window.hideCard(); // Скрываем карточку.
-    }
-    window.removePins();
+    window.card.hide(); // Скрываем карточку.
+    window.pin.removeAll();
     fieldSetsElement.forEach(function (value) {
       value.setAttribute('disabled', true); // Сняли disabled у всех тегов fieldset.address.attributes.setNamedItem('disabled');
     });
     formElement.classList.add('notice__form--disabled');
 
-    addressElement.value = window.getStartPositionPinAddress(); // Возвращаем полю адреса значение стартовой позиции..
-    window.setMainPinOnStart();
+    addressElement.value = window.pin.getStartPositionAddress(); // Возвращаем полю адреса значение стартовой позиции..
+    window.pin.setOnStart();
     window.resetOutputs();
-    window.setFiltersDisabled(true);
+    window.filter.setDisabled(true);
   };
 
   window.enableForm = function () {
@@ -44,12 +42,12 @@
 
     // Устанавливаем координаты адреса, на конце метки.
 
-    window.removePins();
+    window.pin.removeAll();
     // Создаем новый массив домов и заполняем его данными с сервера.
     if (!window.newData) {
-      window.load(window.showError);
+      window.backend.load(window.notification.showError);
     } else {
-      window.renderPins();
+      window.pin.renderAll();
     }
   };
 
@@ -84,7 +82,7 @@
   var capacityElement = formElement.capacity;
 
   // Задаёт синхронизацию поля количества комнать и поля колличества гостей.
-  function onSetRoomWithCapacity(evt) {
+  var onSetRoomWithCapacity = function (evt) {
 
     var capacityCount;
     var room;
@@ -107,7 +105,7 @@
     } else {
       roomsElement.setCustomValidity('');
     }
-  }
+  };
 
   roomsElement.addEventListener('change', onSetRoomWithCapacity);
   capacityElement.addEventListener('change', onSetRoomWithCapacity);
@@ -122,10 +120,10 @@
     var ourAddress = addressElement.value;
 
     formData.append('address', ourAddress);
-    window.upload(formData, function (message) {
+    window.backend.upload(formData, function (message) {
       formElement.reset();
-      window.showInfo(message);
+      window.notification.showInfo(message);
       addressElement.value = ourAddress; // Поле адреса сбрасываться не должно при отправке формы.
-    }, window.showError);
+    }, window.notification.showError);
   });
 })();

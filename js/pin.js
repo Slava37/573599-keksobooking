@@ -17,12 +17,12 @@
   var pinsElement = window.mapElement.querySelector('.map__pins');
   var buttonTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-  window.getStartPositionPinAddress = function () {
+  var getStartPositionAddress = function () {
     return START_POSITION_X + ', ' + START_POSITION_Y;
   };
   // Реализация передвижения метки.
   pinImageElement.addEventListener('mousedown', function (evt) {
-    var position = window.getStartPositionPinAddress();
+    var position = getStartPositionAddress();
     evt.preventDefault();
 
     var startCoords = {
@@ -65,16 +65,15 @@
 
   });
 
-  window.setMainPinOnStart = function () {
+  var setOnStart = function () {
     mainPinElement.style.left = START_POSITION_X + 'px'; // ставим метку на стартовую позицию.
     mainPinElement.style.top = START_POSITION_Y + 'px';
   };
 
   // Удаляет метки.
-  window.removePins = function () {
-    var pinsContainerElement = document.querySelector('.map__pins');
-    pinsContainerElement.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (pinElement) {
-      pinsContainerElement.removeChild(pinElement);
+  var removeAll = function () {
+    pinsElement.querySelectorAll('.map__pin:not(.map__pin--main)').forEach(function (pinElement) {
+      pinsElement.removeChild(pinElement);
     });
   };
 
@@ -90,7 +89,7 @@
 
     // Добавляем обработчик и создание карточки для дома.
     pinElement.addEventListener('click', function () {
-      window.showCard(house);
+      window.card.show(house);
     });
     return pinElement;
   };
@@ -106,15 +105,21 @@
     return fragment;
   };
   // При успешном загрузке данных с сервера мы экспортируем экземпляр данных.
-  window.renderPins = function () {
+  var renderAll = function () {
     var data = window.newData.slice();
-    pinsElement.appendChild(makeFragmentPins(window.filterPins(data))); // Поставили метки обьявлений.
+    pinsElement.appendChild(makeFragmentPins(window.filter.getPins(data))); // Поставили метки обьявлений.
 
-    window.setFiltersDisabled(false);
+    window.filter.setDisabled(false);
 
     // Передаем функцию отрисовки пинов в модуль filter.js чере коллбек.
-    window.setFilterCallback(function () {
-      pinsElement.appendChild(makeFragmentPins(window.filterPins(data)));
+    window.filter.setCallback(function () {
+      pinsElement.appendChild(makeFragmentPins(window.filter.getPins(data)));
     });
+  };
+  window.pin = {
+    getStartPositionAddress: getStartPositionAddress,
+    setOnStart: setOnStart,
+    removeAll: removeAll,
+    renderAll: renderAll
   };
 })();
