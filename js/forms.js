@@ -45,7 +45,10 @@
     window.pin.removeAll();
     // Создаем новый массив домов и заполняем его данными с сервера.
     if (!window.newData) {
-      window.backend.load(window.notification.showError);
+      window.backend.load(function (data) {
+        window.newData = data;
+        window.pin.renderAll();
+      }, window.notification.showError);
     } else {
       window.pin.renderAll();
     }

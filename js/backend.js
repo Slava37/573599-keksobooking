@@ -17,8 +17,7 @@
           if (type === 'POST') {
             onLoad('Успешно!');
           } else {
-            window.newData = xhr.response;
-            window.pin.renderAll();
+            onLoad(xhr.response);
           }
           break;
         default:
@@ -46,8 +45,8 @@
   };
 
   // Функция загрузки данных с сервера Академии.
-  var load = function (onError) {
-    makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, null, onError);
+  var load = function (onLoad, onError) {
+    makeRequest('GET', 'https://js.dump.academy/keksobooking/data', null, onLoad, onError);
   };
   window.backend = {
     load: load,
