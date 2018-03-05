@@ -6,6 +6,13 @@
   var MIN_COST_HOUSE = 5000;
   var MIN_COST_PALACE = 10000;
 
+  var ROOMS_CAPACITY = {
+    '1': ['1'],
+    '2': ['2', '1'],
+    '3': ['3', '2', '1'],
+    '100': ['0']
+  };
+
   var formElement = document.querySelector('.notice__form');
   var addressElement = document.querySelector('#address');
   var fieldSetsElement = formElement.querySelectorAll('fieldset');
@@ -92,64 +99,16 @@
   var capacityElement = formElement.capacity;
 
   // Задаёт синхронизацию поля количества комнать и поля колличества гостей.
-  var onSetRoomWithCapacity = function (evt) {
-
-    var capacityCount;
-    var room;
-
-    if (evt.target === roomsElement) {
-      capacityCount = capacityElement.value;
-      room = evt.target.value;
-
-    } else if (evt.target === capacityElement) {
-      capacityCount = evt.target.value;
-      room = roomsElement.value;
-    }
-    if (room === '1' && capacityCount !== '1') {
-      roomsElement.setCustomValidity('Доступна для 1 гостя');
-    } else if (room === '2' && capacityCount !== '2' && capacityCount !== '1') {
-      roomsElement.setCustomValidity('Доступна для 1 или 2 гостей');
-    } else if (room === '3' && capacityCount !== '3' && capacityCount !== '2' && capacityCount !== '1') {
-      roomsElement.setCustomValidity('Доступна для 1, 2 или 3 гостей');
-    } else if (room === '100' && capacityCount !== '0') {
-      roomsElement.setCustomValidity('Не для гостей');
-    } else {
-      roomsElement.setCustomValidity('');
+  var onRoomChange = function () {
+    if (capacityElement.options.length > 0) {
+      [].forEach.call(capacityElement.options, function (item) {
+        item.selected = (ROOMS_CAPACITY[roomsElement.value][0] === item.value) ? true : false;
+        item.hidden = (ROOMS_CAPACITY[roomsElement.value].indexOf(item.value) >= 0) ? false : true;
+      });
     }
   };
 
-  var onDisabledCapasity = function (evt) {
-    var room = evt.target.value;
-    switch (room) {
-      case '1':
-        capacityElement.options[0].setAttribute('disabled', true);
-        capacityElement.options[1].setAttribute('disabled', true);
-        capacityElement.options[2].removeAttribute('disabled');
-        capacityElement.options[3].setAttribute('disabled', true);
-        break;
-      case '2':
-        capacityElement.options[0].setAttribute('disabled', true);
-        capacityElement.options[1].removeAttribute('disabled');
-        capacityElement.options[2].removeAttribute('disabled');
-        capacityElement.options[3].setAttribute('disabled', true);
-        break;
-      case '3':
-        capacityElement.options[0].removeAttribute('disabled');
-        capacityElement.options[1].removeAttribute('disabled');
-        capacityElement.options[2].removeAttribute('disabled');
-        capacityElement.options[3].setAttribute('disabled', true);
-        break;
-      case '100':
-        capacityElement.options[0].setAttribute('disabled', true);
-        capacityElement.options[1].setAttribute('disabled', true);
-        capacityElement.options[2].setAttribute('disabled', true);
-        capacityElement.options[3].removeAttribute('disabled');
-    }
-  };
-  roomsElement.addEventListener('change', onDisabledCapasity);
-
-  roomsElement.addEventListener('change', onSetRoomWithCapacity);
-  capacityElement.addEventListener('change', onSetRoomWithCapacity);
+  roomsElement.addEventListener('change', onRoomChange);
 
   // Обработчик кнопки "Сбросить"
   btnResetElement.addEventListener('click', disableForm);

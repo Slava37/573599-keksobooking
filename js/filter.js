@@ -61,42 +61,43 @@
       onFilter();
     }
   });
+
+  var getSelectPrice = function (currentPrice, house) {
+    var prices = {
+      'any': true,
+      'low': house.offer.price < LOWER_COST_ROOM,
+      'middle': house.offer.price >= LOWER_COST_ROOM && house.offer.price < HIGHTER_COST_ROOM,
+      'high': house.offer.price >= HIGHTER_COST_ROOM
+    };
+    return prices[currentPrice];
+  };
+  var getSelectType = function (house) {
+    return properties['housing-type'] === 'any' || house.offer.type === properties['housing-type'];
+  };
+  var getSelectRoomsOfGuests = function (property, roomsOrGuests) {
+    return property === 'any' || roomsOrGuests === Number(property);
+  };
+  var getCheckbox = function (property, feature, house) {
+    return property === false || house.offer.features.join(' ').includes(feature);
+  };
+
   // Функция, возращающая результат фильтрации.
   var getPins = function (houses) {
 
-    var priceProperty = function (currentPrice, house) {
-      var prices = {
-        'any': true,
-        'low': house.offer.price < LOWER_COST_ROOM,
-        'middle': house.offer.price >= LOWER_COST_ROOM && house.offer.price < HIGHTER_COST_ROOM,
-        'high': house.offer.price >= HIGHTER_COST_ROOM
-      };
-      return prices[currentPrice];
-    };
-
-    var filterProperties = function (property, value, house) {
-      if (property === properties['housing-type']) {
-        return properties['housing-type'] === 'any' || house.offer.type === properties['housing-type'];
-      } else if (property === properties['housing-rooms']) {
-        return properties['housing-rooms'] === 'any' || house.offer.rooms === Number(properties['housing-rooms']);
-      } else if (property === properties['housing-guests']) {
-        return properties['housing-guests'] === 'any' || house.offer.rooms === Number(properties['housing-guests']);
-      } else {
-        return property === false || house.offer.features.join(' ').includes(value);
-      }
-    };
-
     return houses.filter(function (house) {
-      return priceProperty(properties['housing-price'], house)
-        && filterProperties(properties['housing-type'], null, house)
-        && filterProperties(properties['housing-rooms'], null, house)
-        && filterProperties(properties['housing-guests'], null, house)
-        && filterProperties(properties['filter-wifi'], 'wifi', house)
-        && filterProperties(properties['filter-dishwasher'], 'dishwasher', house)
-        && filterProperties(properties['filter-parking'], 'parking', house)
-        && filterProperties(properties['filter-washer'], 'washer', house)
-        && filterProperties(properties['filter-elevator'], 'elevator', house)
-        && filterProperties(properties['filter-conditioner'], 'conditioner', house);
+
+      return getSelectType(house)
+        && getSelectPrice(properties['housing-price'], house)
+
+        && getSelectRoomsOfGuests(properties['housing-rooms'], house.offer.rooms)
+        && getSelectRoomsOfGuests(properties['housing-guests'], house.offer.guests)
+
+        && getCheckbox(properties['filter-wifi'], 'wifi', house)
+        && getCheckbox(properties['filter-dishwasher'], 'dishwasher', house)
+        && getCheckbox(properties['filter-parking'], 'parking', house)
+        && getCheckbox(properties['filter-washer'], 'washer', house)
+        && getCheckbox(properties['filter-elevator'], 'elevator', house)
+        && getCheckbox(properties['filter-conditioner'], 'conditioner', house);
     });
   };
 
