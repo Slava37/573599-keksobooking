@@ -2,6 +2,9 @@
 
 * Студент: [Владислав Лукин](https://up.htmlacademy.ru/javascript/12/user/573599).
 * Наставник: [Роман Чаругин](https://htmlacademy.ru/profile/id345379).
+<p>Учебный проект, посвященный изучению основ javascript, использованию API и работе с формой. Также основам Drag'n'Drop и валидации форм.</p>
+<p><img alt="pic1" src="screen1.png"/></p>
+<p><img alt="pic2" src="screen2.png"/></p>
 
 <a href="https://htmlacademy.ru/intensive/javascript"><img align="left" width="50" height="50" alt="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/javascript/logo-for-github-2.png"></a>
 
